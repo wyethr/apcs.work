@@ -8,5 +8,4 @@ a list, your honor -
 - list
 - _you_
 - __got__
-
-+ {there}{http://slither.io}
+- {there}{http://slither.io}
