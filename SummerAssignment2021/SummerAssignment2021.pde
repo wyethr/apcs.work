@@ -21,6 +21,10 @@ void draw() {
       Circle e = new Circle(width/2, height/2);
       circles.add(e);
     }
+    
+    if (d.size > 1.75*width) {
+      circles.remove(d);
+    }
   }
   
   for (Circle c : circles) {
