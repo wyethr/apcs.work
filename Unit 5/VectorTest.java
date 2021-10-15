@@ -12,9 +12,9 @@ public class VectorTest {
     System.out.println("magnitude i = " + i.magnitude());
     System.out.println("direction i = " + i.direction());
     iIn.add(j);
-    System.out.println("i + j = " + iIn);
+    System.out.println("i + j = " + iIn.x() + ", " + iIn.y());
     iNo.scalarMultiply(2);
-    System.out.println("i * 2 = " + iNo);
+    System.out.println("i * 2 = " + iNo.x() + ", " + iNo.y());
     System.out.println("i * j = " + iMo.dotProduct(j));
     System.out.println("i - j = " + i.angle(j));
   }

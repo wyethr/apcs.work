@@ -1,5 +1,7 @@
 public class Vector {
 
+  //YAY IT WORKS!
+
   public Vector(double xIn, double yIn) {
     x = xIn;
     y = yIn;
