@@ -10,17 +10,39 @@ public class Main extends PApplet {
   public void setup() {
     background(0);
     book = new Book(this);
-    flower = new Flower(this, (double)width/2, (double)7.25*height/8, height, width);
+    flowers = new ArrayList<Flower>();
+    flowerIndex = 0;
   }
 
   public void draw() {
     background(0);
-    flower.display();
+    for(Flower f: flowers) {
+      f.display();
+    }
     book.display((double)width/2, (double)7*height/8, (int)width, (int)height);
   }
 
   public void keyPressed() {
-    flower.grow();
+    if(keyCode == UP) {
+      if(flowers.size() == 0) {
+        Flower f = new Flower(this, (double)width/2, (double)7.25*height/8, width, height);
+        flowers.add(f);
+      }
+      flowers.get(flowerIndex).grow();
+    }
+    else if(keyCode == RIGHT) {
+      flowerIndex++;
+
+      if(flowerIndex > flowers.size() - 1) {
+        Flower f = new Flower(this, (double)width/2, (double)7.25*height/8, width, height);
+        flowers.add(f);
+      }
+    }
+    else if(keyCode == LEFT) {
+      if(flowerIndex > 0) {
+        flowerIndex--;
+      }
+    }
   }
 
   public static void main(String[] args) {
@@ -28,6 +50,6 @@ public class Main extends PApplet {
   }
 
   private Book book;
-  private Flower flower;
-
+  private ArrayList<Flower> flowers;
+  private int flowerIndex;
 }
