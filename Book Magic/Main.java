@@ -8,18 +8,20 @@ public class Main extends PApplet {
   }
 
   public void setup() {
-    background(0);
+    background(255);
     book = new Book(this);
     flowers = new ArrayList<Flower>();
     flowerIndex = 0;
   }
 
   public void draw() {
-    background(0);
+    background(255);
     for(Flower f: flowers) {
       f.display();
     }
     book.display((double)width/2, (double)7*height/8, (int)width, (int)height);
+    fill(255);
+    rect(0, 7*height/8 + height/4, width, 7*height/8 + height/4, width, height, 0, height);
   }
 
   public void keyPressed() {

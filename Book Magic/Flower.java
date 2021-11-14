@@ -22,11 +22,13 @@ public class Flower {
     petalCount = (int)p.random(4, 20);
     petalAngle = (float)360/petalCount;
     petalWidth = (float)(2*centerRadius*3.14159)/petalCount;
-    petalMax = (float)((petalWidth/centerRadius)*(2*centerMax*3.14159)/petalCount);
-    petalLength = (float)p.random(centerRadius, centerRadius*20);
+    petalMaxW = (float)((petalWidth/centerRadius)*(2*centerMax*3.14159)/petalCount);
+    petalLength = (float)p.random(centerRadius*2, centerRadius*5);
+    petalMaxL = (float)(petalLength*centerMax/centerRadius);
     petalR = (int)p.random(0, 255);
     petalB = (int)p.random(0, 255);
     petalG = (int)p.random(0, 255);
+    petalLayer = (int)p.random(0, 4);
   }
 
   public void display() {
@@ -49,6 +51,24 @@ public class Flower {
 
     p.popMatrix();
 
+    //PETAL LAYER STUFF I HAD TO DITCH BC YOU CAN'T PUSH/POP MATRIX > 32 TIMES
+//    if(petalLayer > 1) {
+//      for(int i = 1; i <= petalLayer; i++) {
+//        p.pushMatrix();
+//        p.translate(x, y);
+//        petalR = (int)p.random(0, 255);
+//        petalB = (int)p.random(0, 255);
+//        petalG = (int)p.random(0, 255);
+//        p.fill(petalR, petalB, petalG);
+//        p.rotate((float)(1/2*360/petalCount));
+//
+//        for(int j = 1; j <= petalCount; j++) {
+//          p.ellipse(0, 0, petalWidth, petalLength);
+//          p.rotate((float)p.radians(petalAngle));
+//        }
+//      }
+//    }
+
     p.fill(255, 219, 75);
     p.ellipse(x, y, centerRadius, centerRadius);
 
@@ -65,7 +85,8 @@ public class Flower {
     if(centerRadius < centerMax && t > 5) {
       centerRadius = centerRadius+centerMax/100;
 
-      petalWidth = petalWidth+petalMax/100;
+      petalWidth = petalWidth + petalMaxW/100;
+      petalLength = petalLength + petalMaxL/100;
     }
   }
 
@@ -92,8 +113,10 @@ public class Flower {
   private float petalAngle;
   private float petalWidth;
   private float petalLength;
-  private float petalMax;
+  private float petalMaxW;
+  private float petalMaxL;
   private int petalR;
   private int petalB;
   private int petalG;
+  private int petalLayer;
 }
