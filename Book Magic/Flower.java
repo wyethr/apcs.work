@@ -37,7 +37,9 @@ public class Flower {
     p.pushMatrix();
     p.translate(translateX, translateY);
     for(int i = 0; i < xPositions.size(); i++) {
-      p.ellipse(xPositions.get(i), yPositions.get(i), stemRadius, stemRadius);
+      p.translate(x, y);
+      p.ellipse(0, 0, stemRadius, stemRadius);
+      //p.ellipse(xPositions.get(i), yPositions.get(i), stemRadius, stemRadius);
     }
 
     p.pushMatrix();
@@ -77,9 +79,11 @@ public class Flower {
 
   public void grow() {
     t += 0.5;
-    y = y - p.noise(t)*(float)5;
+    y = p.noise(t)*(float)5;
+    //y = y + p.noise(t)*(float)5;
     yPositions.add(y);
-    x = x + ((p.noise(t + 1000)+randomX));
+    x = p.noise(t+1000) + randomX;
+    //x = x + ((p.noise(t + 1000)+randomX));
     xPositions.add(x);
 
     if(centerRadius < centerMax && t > 5) {
@@ -88,6 +92,23 @@ public class Flower {
       petalWidth = petalWidth + petalMaxW/100;
       petalLength = petalLength + petalMaxL/100;
     }
+  }
+
+  public void waveLeft(int howLong) {
+    for(int i = 0; i < howLong; i++) {
+      //System.out.println("original i = " + xPositions.get(i));
+      //xPositions.get(i) = xPositions.get(i) + 1;
+      //System.out.println("new i = " + xPositions.get(i));
+      //System.out.println("");
+
+      float newX = xPositions.get(i) - (float)10;
+      xPositions.remove(i);
+      xPositions.add(i, newX);
+    }
+  }
+
+  public int getLength() {
+    return yPositions.size();
   }
 
   private PApplet p;

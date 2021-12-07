@@ -12,13 +12,23 @@ public class Main extends PApplet {
     book = new Book(this);
     flowers = new ArrayList<Flower>();
     flowerIndex = 0;
+    waveMinus = 0;
   }
 
   public void draw() {
+
     background(255);
     for(Flower f: flowers) {
       f.display();
+
+      waveFactorLeft = f.getLength()/4;
+
+      for(int i = 0; i < waveFactorLeft - waveMinus; i++)
+        //f.waveLeft(i);
     }
+
+    waveMinus++;
+
     book.display((double)width/2, (double)7*height/8, (int)width, (int)height);
     fill(255);
     rect(0, 7*height/8 + height/4, width, 7*height/8 + height/4, width, height, 0, height);
@@ -54,4 +64,6 @@ public class Main extends PApplet {
   private Book book;
   private ArrayList<Flower> flowers;
   private int flowerIndex;
+  private int waveFactorLeft;
+  private int waveMinus;
 }
