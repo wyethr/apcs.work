@@ -36,8 +36,11 @@ public class Flower {
     p.fill(24, 103, 47);
     p.pushMatrix();
     p.translate(translateX, translateY);
-    for(int i = 0; i < xPositions.size(); i++) {
-      p.translate(x, y);
+    for(int i = 1; i < xPositions.size(); i++) {
+      System.out.println(xPositions.get(i));
+      p.translate(xPositions.get(i - 1) + xPositions.get(i), -1*(yPositions.get(i - 1) + yPositions.get(i)));
+      System.out.println("y position = " + (translateY + yPositions.get(i - 1) + yPositions.get(i)));
+      System.out.println("");
       p.ellipse(0, 0, stemRadius, stemRadius);
       //p.ellipse(xPositions.get(i), yPositions.get(i), stemRadius, stemRadius);
     }
@@ -78,7 +81,7 @@ public class Flower {
   }
 
   public void grow() {
-    t += 0.5;
+    t += 0.05;
     y = p.noise(t)*(float)5;
     //y = y + p.noise(t)*(float)5;
     yPositions.add(y);
@@ -94,16 +97,20 @@ public class Flower {
     }
   }
 
-  public void waveLeft(int howLong) {
-    for(int i = 0; i < howLong; i++) {
+  public void wave(int startPoint, int waveDirection, int upOrDown) {
+    for(int i = startPoint; i < yPositions.size(); i++) {
       //System.out.println("original i = " + xPositions.get(i));
       //xPositions.get(i) = xPositions.get(i) + 1;
       //System.out.println("new i = " + xPositions.get(i));
       //System.out.println("");
 
-      float newX = xPositions.get(i) - (float)10;
+      float newX = xPositions.get(i) + (float)waveDirection*(float)0.01;
       xPositions.remove(i);
       xPositions.add(i, newX);
+
+      float newY = yPositions.get(i) + (float)upOrDown*(float)0.01;
+      yPositions.remove(i);
+      yPositions.add(i, newY);
     }
   }
 
