@@ -13,6 +13,7 @@ public class Flower {
     randomX = (float)p.random(-1f, 1f);
     xPositions = new ArrayList<Float>();
     yPositions = new ArrayList<Float>();
+    allPositions = new ArrayList<PVector>();
 
     stemRadius = (float)p.random(5*width/1000, 10*width/1000);
 
@@ -36,11 +37,8 @@ public class Flower {
     p.fill(24, 103, 47);
     p.pushMatrix();
     p.translate(translateX, translateY);
-    for(int i = 1; i < xPositions.size(); i++) {
-      System.out.println(xPositions.get(i));
-      p.translate(xPositions.get(i - 1) + xPositions.get(i), -1*(yPositions.get(i - 1) + yPositions.get(i)));
-      System.out.println("y position = " + (translateY + yPositions.get(i - 1) + yPositions.get(i)));
-      System.out.println("");
+    for(int i = 1; i < allPositions.size(); i++) {
+      p.translate(allPositions.get(i - 1).x + allPositions.get(i).x, -1*(allPositions.get(i - 1).y + allPositions.get(i).y));
       p.ellipse(0, 0, stemRadius, stemRadius);
       //p.ellipse(xPositions.get(i), yPositions.get(i), stemRadius, stemRadius);
     }
@@ -82,12 +80,13 @@ public class Flower {
 
   public void grow() {
     t += 0.05;
-    y = p.noise(t)*(float)5;
+    y = p.noise(t)*(float)2;
     //y = y + p.noise(t)*(float)5;
     yPositions.add(y);
     x = p.noise(t+1000) + randomX;
     //x = x + ((p.noise(t + 1000)+randomX));
     xPositions.add(x);
+    allPositions.add(new PVector(x, y));
 
     if(centerRadius < centerMax && t > 5) {
       centerRadius = centerRadius+centerMax/100;
@@ -104,21 +103,24 @@ public class Flower {
       //System.out.println("new i = " + xPositions.get(i));
       //System.out.println("");
 
-      float newX = xPositions.get(i) + (float)waveDirection*(float)0.01;
+      float newX = allPositions.get(i).x + (float)waveDirection*(float)0.01;
       xPositions.remove(i);
       xPositions.add(i, newX);
 
-      float newY = yPositions.get(i) + (float)upOrDown*(float)0.01;
+      float newY = allPositions.get(i).y + (float)upOrDown*(float)0.01;
       yPositions.remove(i);
       yPositions.add(i, newY);
+
+      allPositions.get(i).rotate(upOrDown*(p.PI/1000));
     }
   }
 
   public int getLength() {
-    return yPositions.size();
+    return allPositions.size();
   }
 
   private PApplet p;
+  private ArrayList<PVector> allPositions;
   private ArrayList<Float> xPositions;
   private ArrayList<Float> yPositions;
   private float randomX;

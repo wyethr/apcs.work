@@ -12,18 +12,16 @@ public class Main extends PApplet {
     book = new Book(this);
     flowers = new ArrayList<Flower>();
     flowerIndex = 0;
-    while(leftOrRight != -1 || leftOrRight != 1) {
-      leftOrRight = (int)random(-1, 2);
-    }
+    leftOrRight = (int)random(0, 2)*2 - 1;
     upOrDown = -1;
   }
 
   public void draw() {
+
     background(255);
-    System.out.println("GOT HERE");
     for(Flower f: flowers) {
       f.display();
-      f.wave(f.getLength()/2, leftOrRight, upOrDown);
+      f.wave(3*f.getLength()/4, leftOrRight, upOrDown);
     }
 
     book.display((double)width/2, (double)7*height/8, (int)width, (int)height);
@@ -46,6 +44,7 @@ public class Main extends PApplet {
         Flower f = new Flower(this, (double)width/2, (double)7.25*height/8, width, height);
         flowers.add(f);
       }
+
     }
     else if(keyCode == LEFT) {
       if(flowerIndex > 0) {
