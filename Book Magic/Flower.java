@@ -1,3 +1,5 @@
+//WYETH YOU GOTTA USE THE FROMANGLE FUCTION AND CHANGE IT SO THAT YOU GET THE ANGLE FROM A RANDOM FUNCTION AND THEN DO A PVECTOR FROM THAT ANGLE
+
 import processing.core.*;
 import java.util.*;
 
@@ -14,6 +16,7 @@ public class Flower {
     xPositions = new ArrayList<Float>();
     yPositions = new ArrayList<Float>();
     allPositions = new ArrayList<PVector>();
+    ogPositions = new ArrayList<PVector>();
 
     stemRadius = (float)p.random(5*width/1000, 10*width/1000);
 
@@ -86,7 +89,9 @@ public class Flower {
     x = p.noise(t+1000) + randomX;
     //x = x + ((p.noise(t + 1000)+randomX));
     xPositions.add(x);
-    allPositions.add(new PVector(x, y));
+    //allPositions.add(new PVector(x, y));
+    allPositions.
+    ogPositions.add(new PVector(x, y));
 
     if(centerRadius < centerMax && t > 5) {
       centerRadius = centerRadius+centerMax/100;
@@ -112,6 +117,12 @@ public class Flower {
       yPositions.add(i, newY);
 
       allPositions.get(i).rotate(upOrDown*(p.PI/1000));
+
+      if(Math.atan(allPositions.get(i).y/allPositions.get(i).x) > p.PI/4) {
+        //if(Math.acos(((allPositions.get(i).x*ogPositions.get(i).x) + (allPositions.get(i).y*ogPositions.get(i).x)))/(Math.sqrt(allPositions.get(i).x*allPositions.get(i).x + allPositions.get(i).y*allPositions.get(i).y)*Math.sqrt(ogPositions.get(i).x*ogPositions.get(i).x + ogPositions.get(i).y*ogPositions.get(i).y)) > p.PI/4) {
+        upOrDown = upOrDown*-1;
+        waveDirection = waveDirection*-1;
+      }
     }
   }
 
@@ -121,6 +132,7 @@ public class Flower {
 
   private PApplet p;
   private ArrayList<PVector> allPositions;
+  private ArrayList<PVector> ogPositions;
   private ArrayList<Float> xPositions;
   private ArrayList<Float> yPositions;
   private float randomX;

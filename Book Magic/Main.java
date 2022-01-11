@@ -14,6 +14,7 @@ public class Main extends PApplet {
     flowerIndex = 0;
     leftOrRight = (int)random(0, 2)*2 - 1;
     upOrDown = -1;
+    waveShow = 2;
   }
 
   public void draw() {
@@ -21,7 +22,10 @@ public class Main extends PApplet {
     background(255);
     for(Flower f: flowers) {
       f.display();
-      f.wave(3*f.getLength()/4, leftOrRight, upOrDown);
+
+      if(waveShow == 1) {
+        f.wave(3*f.getLength()/4, leftOrRight, upOrDown);
+      }
     }
 
     book.display((double)width/2, (double)7*height/8, (int)width, (int)height);
@@ -51,6 +55,13 @@ public class Main extends PApplet {
         flowerIndex--;
       }
     }
+    else if(keyCode == SHIFT) {
+      if(waveShow == 2)
+        waveShow = 1;
+      else {
+        waveShow = 2;
+      }
+    }
   }
 
   public static void main(String[] args) {
@@ -62,4 +73,5 @@ public class Main extends PApplet {
   private int flowerIndex;
   private int upOrDown;
   private int leftOrRight;
+  private int waveShow;
 }
