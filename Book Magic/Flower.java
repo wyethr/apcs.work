@@ -89,8 +89,7 @@ public class Flower {
     x = p.noise(t+1000) + randomX;
     //x = x + ((p.noise(t + 1000)+randomX));
     xPositions.add(x);
-    //allPositions.add(new PVector(x, y));
-    allPositions.
+    allPositions.add(new PVector(x, y));
     ogPositions.add(new PVector(x, y));
 
     if(centerRadius < centerMax && t > 5) {
