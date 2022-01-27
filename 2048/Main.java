@@ -13,9 +13,10 @@ public class Main extends PApplet {
     boxes = new ArrayList<Box>();
     doges = new ArrayList<Doge>();
 
-    float xNowIn = (((width-(5*height/6))/2) + height/30);
+    xNowIn = (((width-(5*height/6))/2) + height/30);
     float xNow = xNowIn;
-    float yNow = height/12 + height/30;
+    yNowIn = height/12 + height/30;
+    float yNow = yNowIn;
 
     for(int i = 1; i <= 16; i++) {
       if(i != 1 && i%4 == 1) {
@@ -52,31 +53,66 @@ public class Main extends PApplet {
       d.display();
     }
 
+    rectMode(CORNER);
+    fill(0);
+    text(doges.size(), 25, 25);
+
+
   }
 
   public void keyPressed() {
     if(keyCode == LEFT) {
       for(Doge d: doges) {
-        d.moveLeft();
+        while(d.x() > xNowIn + height/30) {
+          d.moveLeft();
+        }
       }
     }
 
     else if(keyCode == RIGHT) {
       for(Doge d: doges) {
-        d.moveRight();
+        while(d.x() < (((width-(5*height/6))/2) + height/30) + (3*(height/6 + height/30))) {
+          d.moveRight();
+        }
       }
     }
 
     else if(keyCode == DOWN) {
       for(Doge d: doges) {
-        d.moveDown();
+        while(d.y() < (yNowIn + (3*(height/6 + height/30)))) {
+          d.moveDown();
+        }
       }
     }
 
     else if(keyCode == UP) {
       for(Doge d: doges) {
-        d.moveUp();
+        while(d.y() > yNowIn + height/30) {
+          d.moveUp();
+        }
       }
+    }
+
+    Doge e = new Doge(this, width, height);
+
+    if(e.checkCollide(doges) == false) {
+      System.out.println("skip here");
+    }
+    while(e.checkCollide(doges) == true) {
+      System.out.println("here");
+      System.out.println("old x = " + e.x());
+      System.out.println("old y = " + e.y());
+      System.out.println("");
+
+      e = new Doge(this, width, height);
+      System.out.println("new x = " + e.x());
+      System.out.println("new y = " + e.y());
+    }
+    doges.add(e);
+
+
+    for(Doge f: doges) {
+      f.checkCollide(doges);
     }
   }
 
@@ -86,9 +122,12 @@ public class Main extends PApplet {
 
 
   ArrayList<Box> boxes;
+
   float xNow;
   float yNow;
+  float xNowIn;
+  float yNowIn;
+
   Doge test;
   ArrayList<Doge> doges;
-
 }
