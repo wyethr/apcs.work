@@ -67,26 +67,34 @@ public class Main extends PApplet {
 
   public void keyPressed() {
     if(keyCode == LEFT) {
-      for(Doge d: doges) {
-        d.moveLeft();
+      for(int i = 0; i < 4; i++) {
+        for(Doge d: doges) {
+          d.moveLeft();
+        }
       }
     }
 
     else if(keyCode == RIGHT) {
-      for(Doge d: doges) {
-         d.moveRight();
+      for(int j = 0; j < 4; j++) {
+        for(Doge d: doges) {
+          d.moveRight();
+        }
       }
     }
 
     else if(keyCode == DOWN) {
-      for(Doge d: doges) {
-         d.moveDown();
+      for(int k = 0; k < 4; k++) {
+        for(Doge d: doges) {
+          d.moveDown();
+        }
       }
     }
 
     else if(keyCode == UP) {
-      for(Doge d: doges) {
-         d.moveUp();
+      for(int l = 0; l < 4; l++) {
+        for(Doge d: doges) {
+          d.moveUp();
+        }
       }
     }
 
@@ -94,7 +102,10 @@ public class Main extends PApplet {
 
     while(e.checkCollide() == true) {
       e = new Doge(this, width, height, xNowIn, yNowIn, yFactor, sideFactor, doges);
+      System.out.println("here at making the new e");
+      System.out.println("(" + e.x() + ", " + e.y() + ")");
     }
+    System.out.println("");
 
     doges.add(e);
   }

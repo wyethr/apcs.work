@@ -46,7 +46,7 @@ public class Doge {
 
   public void moveLeft() {
     while(x > xNowIn + height/30) {
-      if(leftCollide() == false) {
+      if(checkCollide("left") == false) {
         x = x - moveFactor;
       }
       else {
@@ -56,8 +56,8 @@ public class Doge {
   }
 
   public void moveRight() {
-    while(x < (((width-(5*height/6))/2) + height/30) + (3*(height/6 + height/30))) {
-      if(rightCollide() == false) {
+    while(x < xNowIn + (2*(height/6 + height/30))) {
+      if(checkCollide("right") == false) {
         x = x + moveFactor;
       }
       else {
@@ -67,8 +67,8 @@ public class Doge {
   }
 
   public void moveDown() {
-    while(y < (yNowIn + (3*(height/6 + height/30)))) {
-      if(downCollide() == false) {
+    while(y < (yNowIn + (2*(height/6 + height/30)))) {
+      if(checkCollide("down") == false) {
         y = y + moveFactor;
       }
       else {
@@ -79,7 +79,7 @@ public class Doge {
 
   public void moveUp() {
     while(y > yNowIn + height/30) {
-      if(upCollide() == false) {
+      if(checkCollide("up") == false) {
         y = y - moveFactor;
       }
       else {
@@ -126,20 +126,30 @@ public class Doge {
 
   }
 
-  public boolean rightCollide() {
-    float xBit = x + moveFactor;
+  public boolean checkCollide(String direction) {
+    float xBit = x;
     float yBit = y;
 
-    for(Doge other: allDoges) {
-      //System.out.println("other.x = " + other.x);
-      //System.out.println("other.y = " + other.y);
+    if(direction == "right") {
+      xBit = xBit + moveFactor;
+    }
+    else if(direction == "left") {
+      xBit = xBit - moveFactor;
+    }
+    else if(direction == "up") {
+      yBit = yBit - moveFactor;
+    }
+    else if(direction == "down") {
+      yBit = yBit + moveFactor;
+    }
 
+    for(Doge other: allDoges) {
       if(other.equals(this)) {
-        continue;
+        break;
       }
 
       else if(other.x == xBit && other.y == yBit) {
-       return true;
+        return true;
       }
     }
 
@@ -147,80 +157,33 @@ public class Doge {
 
   }
 
-  public boolean leftCollide() {
-    float xBit = x - moveFactor;
+  public boolean checkSingleCollide(String direction, Doge other) {
+    float xBit = x;
     float yBit = y;
 
-    for(Doge other: allDoges) {
-      //System.out.println("other.x = " + other.x);
-      //System.out.println("other.y = " + other.y);
-
-      if(other.equals(this)) {
-        continue;
-      }
-
-      else if(other.x == xBit && other.y == yBit) {
-       return true;
-      }
+    if(direction == "right") {
+      xBit = xBit + moveFactor;
+    }
+    else if(direction == "left") {
+      xBit = xBit - moveFactor;
+    }
+    else if(direction == "up") {
+      yBit = yBit - moveFactor;
+    }
+    else if(direction == "down") {
+      yBit = yBit + moveFactor;
     }
 
-    return false;
-
-  }
-
-  public boolean upCollide() {
-    float xBit = x;
-    float yBit = y - moveFactor;
-
-    for(Doge other: allDoges) {
-      //System.out.println("other.x = " + other.x);
-      //System.out.println("other.y = " + other.y);
-
-      if(other.equals(this)) {
-        continue;
-      }
-
-      else if(other.x == xBit && other.y == yBit) {
-       return true;
-      }
+    if(other.equals(this)) {
+      return false;
     }
-
-    return false;
-
-  }
-
-  public boolean downCollide() {
-    float xBit = x;
-    float yBit = y + moveFactor;
-
-    for(Doge other: allDoges) {
-      //System.out.println("other.x = " + other.x);
-      //System.out.println("other.y = " + other.y);
-
-      if(other.equals(this)) {
-        continue;
-      }
-
-      else if(other.x == xBit && other.y == yBit) {
-       return true;
-      }
-    }
-
-    return false;
-
-  }
-
-  public boolean doMove() {
-    return doMove;
-  }
-
-  public void changeDoMove() {
-    if(doMove == true) {
-      doMove = false;
+    else if(other.x == xBit && other.y == yBit) {
+      return true;
     }
     else {
-      doMove = true;
+      return false;
     }
+
   }
 
   protected PApplet p;
@@ -239,7 +202,6 @@ public class Doge {
 
   protected ArrayList<Doge> allDoges;
 
-  protected boolean doMove;
   protected float xNowIn;
   protected float yNowIn;
 }
