@@ -24,6 +24,16 @@ public class Box {
     p.rect(x, y, side, side);
   }
 
+  public boolean checkCollide(Doge other) {
+
+    if(other.x() >= x && other.x() <= x + side && other.y() >= y && other.y() <= y + side) {
+      return true;
+    }
+
+    return false;
+
+  }
+
   private PApplet p;
   private float x;
   private float y;

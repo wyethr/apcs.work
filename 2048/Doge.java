@@ -3,47 +3,23 @@ import java.util.*;
 
 public class Doge {
 
-  public Doge(PApplet p, float side, float x, float y, float moveFactor) {
-    this.p = p;
-    this.side = side;
-    this.x = x;
-    this.y = y;
-    this.moveFactor = moveFactor;
-
-    typeMultIn = p.random(1, 1920);
-
-    if(typeMultIn <= 1024 ) {
-      typeMult = 1;
-    }
-    else if(typeMultIn <= 1536) {
-      typeMult = 2;
-    }
-    else if(typeMultIn <= 1792) {
-      typeMult = 3;
-    }
-    else {
-      typeMult = 4;
-    }
-
-    type = (int)Math.pow(2, typeMult);
-  }
-
-  public Doge(PApplet p, float width, float height) {
+  public Doge(PApplet p, float width, float height, float xNowIn, float yNowIn, float yFactor, float sideFactor, ArrayList<Doge> manyDoges) {
     this.p = p;
     this.width = width;
     this.height = height;
+    this.xNowIn = xNowIn;
+    this.yNowIn = yNowIn;
+    allDoges = manyDoges;
 
-    side = height/6;
-    moveFactor = height/30;
-    float xNowIn = ((width-(5*height/6))/2) + height/30;
+    side = sideFactor;
+    moveFactor = yFactor;
     //System.out.println("xNowIn = " + xNowIn);
-    float yNowIn = height/12 + height/30;
     //System.out.println("yNowIn = " + yNowIn);
     //System.out.println("height/30 = " + height/30);
     //System.out.println("");
 
-    x = xNowIn + ((int)p.random(0, 3)*(height/6 + height/30));
-    y = yNowIn + ((int)p.random(0, 3)*(height/6 + height/30));
+    x = xNowIn + ((int)p.random(0, 3)*(yFactor));
+    y = yNowIn + ((int)p.random(0, 3)*(yFactor));
 
     //System.out.println("x = " + x);
     //System.out.println("y = " + y);
@@ -69,19 +45,47 @@ public class Doge {
   }
 
   public void moveLeft() {
-    x = x - side - moveFactor;
+    while(x > xNowIn + height/30) {
+      if(leftCollide() == false) {
+        x = x - moveFactor;
+      }
+      else {
+        break;
+      }
+    }
   }
 
   public void moveRight() {
-    x = x + side + moveFactor;
+    while(x < (((width-(5*height/6))/2) + height/30) + (3*(height/6 + height/30))) {
+      if(rightCollide() == false) {
+        x = x + moveFactor;
+      }
+      else {
+        return;
+      }
+    }
   }
 
   public void moveDown() {
-    y = y + side + moveFactor;
+    while(y < (yNowIn + (3*(height/6 + height/30)))) {
+      if(downCollide() == false) {
+        y = y + moveFactor;
+      }
+      else {
+        return;
+      }
+    }
   }
 
   public void moveUp() {
-    y = y - side - moveFactor;
+    while(y > yNowIn + height/30) {
+      if(upCollide() == false) {
+        y = y - moveFactor;
+      }
+      else {
+        return;
+      }
+    }
   }
 
   public float x() {
@@ -100,7 +104,7 @@ public class Doge {
     return type;
   }
 
-  public boolean checkCollide(ArrayList<Doge> allDoges) {
+  public boolean checkCollide() {
     //System.out.println("x = " + x);
     //System.out.println("y = " + y);
     //System.out.println("");
@@ -122,6 +126,103 @@ public class Doge {
 
   }
 
+  public boolean rightCollide() {
+    float xBit = x + moveFactor;
+    float yBit = y;
+
+    for(Doge other: allDoges) {
+      //System.out.println("other.x = " + other.x);
+      //System.out.println("other.y = " + other.y);
+
+      if(other.equals(this)) {
+        continue;
+      }
+
+      else if(other.x == xBit && other.y == yBit) {
+       return true;
+      }
+    }
+
+    return false;
+
+  }
+
+  public boolean leftCollide() {
+    float xBit = x - moveFactor;
+    float yBit = y;
+
+    for(Doge other: allDoges) {
+      //System.out.println("other.x = " + other.x);
+      //System.out.println("other.y = " + other.y);
+
+      if(other.equals(this)) {
+        continue;
+      }
+
+      else if(other.x == xBit && other.y == yBit) {
+       return true;
+      }
+    }
+
+    return false;
+
+  }
+
+  public boolean upCollide() {
+    float xBit = x;
+    float yBit = y - moveFactor;
+
+    for(Doge other: allDoges) {
+      //System.out.println("other.x = " + other.x);
+      //System.out.println("other.y = " + other.y);
+
+      if(other.equals(this)) {
+        continue;
+      }
+
+      else if(other.x == xBit && other.y == yBit) {
+       return true;
+      }
+    }
+
+    return false;
+
+  }
+
+  public boolean downCollide() {
+    float xBit = x;
+    float yBit = y + moveFactor;
+
+    for(Doge other: allDoges) {
+      //System.out.println("other.x = " + other.x);
+      //System.out.println("other.y = " + other.y);
+
+      if(other.equals(this)) {
+        continue;
+      }
+
+      else if(other.x == xBit && other.y == yBit) {
+       return true;
+      }
+    }
+
+    return false;
+
+  }
+
+  public boolean doMove() {
+    return doMove;
+  }
+
+  public void changeDoMove() {
+    if(doMove == true) {
+      doMove = false;
+    }
+    else {
+      doMove = true;
+    }
+  }
+
   protected PApplet p;
 
   protected int type;
@@ -135,4 +236,10 @@ public class Doge {
 
   protected float width;
   protected float height;
+
+  protected ArrayList<Doge> allDoges;
+
+  protected boolean doMove;
+  protected float xNowIn;
+  protected float yNowIn;
 }
