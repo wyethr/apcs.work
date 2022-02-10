@@ -1,7 +1,7 @@
-//OKAY SO POSSIBLE SOLUTION:
-//1) YOU HAVE THE DOGE() CONSTRUCTOR IMPORT AN ARRAYLIST OF boxes
-//AND THEN YOU HAVE IT ASSIGN OG X + Y BASED OFF OF A RANDOM BOX'S X + Y
-//AND THEN IF THAT DOESN'T WORK FOR E YOU ELIMINATE THE BOX THAT YOU ORIGINALLY PUT IN
+//THE! CHECK! COLLIDE! FOR! EACH! DOESN'T! WORK!
+//URGHHH
+//JFKDLSJFKLDSJFKDLS BUT IT WORKS ON EACH INDIVIDUAL ARROW IT JUST-
+//FHDKSFHKDSLAJFAAAAAAAAAA
 
 import java.util.*;
 import processing.core.*;
@@ -38,7 +38,7 @@ public class Main extends PApplet {
     }
 
 
-    Doge test = new Doge(this, width, height, xNowIn, yNowIn, yFactor, sideFactor, doges);
+    Doge test = new Doge(this, width, height, xNowIn, yNowIn, yFactor, sideFactor, doges, boxes);
     doges.add(test);
   }
 
@@ -69,43 +69,36 @@ public class Main extends PApplet {
 
   public void keyPressed() {
     if(keyCode == LEFT) {
-      for(int i = 0; i < 4; i++) {
-        for(Doge d: doges) {
-          d.moveLeft();
-        }
+      for(Doge d: doges) {
+        d.moveLeft();
       }
     }
 
     else if(keyCode == RIGHT) {
-      for(int j = 0; j < 4; j++) {
-        for(Doge d: doges) {
-          d.moveRight();
-        }
+      for(Doge d: doges) {
+        d.moveRight();
       }
     }
 
     else if(keyCode == DOWN) {
-      for(int k = 0; k < 4; k++) {
-        for(Doge d: doges) {
-          d.moveDown();
-        }
+      for(Doge d: doges) {
+        d.moveDown();
       }
     }
 
     else if(keyCode == UP) {
-      for(int l = 0; l < 4; l++) {
-        for(Doge d: doges) {
-          d.moveUp();
-        }
+      for(Doge d: doges) {
+        d.moveUp();
       }
     }
 
-    Doge e = new Doge(this, width, height, xNowIn, yNowIn, yFactor, sideFactor, doges);
+    Doge e = new Doge(this, width, height, xNowIn, yNowIn, yFactor, sideFactor, doges, boxes);
 
     while(e.checkCollide() == true) {
-      e = new Doge(this, width, height, xNowIn, yNowIn, yFactor, sideFactor, doges);
-      System.out.println("here at making the new e");
-      System.out.println("(" + e.x() + ", " + e.y() + ")");
+      e.newDoge();
+      //e = new Doge(this, width, height, xNowIn, yNowIn, yFactor, sideFactor, doges, boxes);
+      //System.out.println("here at making the new e");
+      //System.out.println("(" + e.x() + ", " + e.y() + ")");
     }
     System.out.println("");
 
@@ -116,8 +109,7 @@ public class Main extends PApplet {
     PApplet.main("Main");
   }
 
-
-  ArrayList<Box> boxes;
+  private ArrayList<Box> boxes;
 
   float xNow;
   float yNow;

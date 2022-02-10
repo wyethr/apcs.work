@@ -34,6 +34,10 @@ public class Box {
 
   }
 
+  public Box copy() {
+    return new Box(p, x, y, side);
+  }
+
   private PApplet p;
   private float x;
   private float y;

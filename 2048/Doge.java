@@ -3,13 +3,17 @@ import java.util.*;
 
 public class Doge {
 
-  public Doge(PApplet p, float width, float height, float xNowIn, float yNowIn, float yFactor, float sideFactor, ArrayList<Doge> manyDoges) {
+  public Doge(PApplet p, float width, float height, float xNowIn, float yNowIn, float yFactor, float sideFactor, ArrayList<Doge> manyDoges, ArrayList<Box> boxesIn) {
     this.p = p;
     this.width = width;
     this.height = height;
     this.xNowIn = xNowIn;
     this.yNowIn = yNowIn;
+    boxes = new ArrayList<Box>();
     allDoges = manyDoges;
+    for(Box b: boxesIn) {
+      boxes.add(b.copy());
+    }
 
     side = sideFactor;
     moveFactor = yFactor;
@@ -183,7 +187,15 @@ public class Doge {
     else {
       return false;
     }
+  }
 
+  public void newDoge() {
+    System.out.println("boxes length = " + boxes.size());
+    Box get = boxes.get((int)p.random(0, boxes.size()));
+    x = get.x();
+    y = get.y();
+
+    boxes.remove(get);
   }
 
   protected PApplet p;
@@ -204,4 +216,6 @@ public class Doge {
 
   protected float xNowIn;
   protected float yNowIn;
+
+  private ArrayList<Box> boxes;
 }
