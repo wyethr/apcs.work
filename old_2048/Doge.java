@@ -3,12 +3,18 @@ import java.util.*;
 
 public class Doge {
 
-  public Doge(PApplet p, float width, float height, float xNowIn, float yNowIn, float yFactor, float sideFactor, ArrayList<Doge> manyDoges, ArrayList<Box> boxesIn) {
+  public Doge(PApplet p, float width, float height, float sideFactor, ArrayList<Doge> manyDoges, ArrayList<Box> boxesIn) {
     this.p = p;
     this.width = width;
     this.height = height;
-    this.xNowIn = xNowIn;
-    this.yNowIn = yNowIn;
+    xNowIn = 0;
+    yNowIn = 0;
+    x = 0;
+    y = 0;
+
+    row = (int)p.random(0, 4);
+    column = (int)p.random(0, 4);
+
     boxes = new ArrayList<Box>();
     allDoges = manyDoges;
     for(Box b: boxesIn) {
@@ -22,8 +28,8 @@ public class Doge {
     //System.out.println("height/30 = " + height/30);
     //System.out.println("");
 
-    x = xNowIn + ((int)p.random(0, 3)*(yFactor));
-    y = yNowIn + ((int)p.random(0, 3)*(yFactor));
+    //x = xNowIn + ((int)p.random(0, 3)*(yFactor));
+    //y = yNowIn + ((int)p.random(0, 3)*(yFactor));
 
     //System.out.println("x = " + x);
     //System.out.println("y = " + y);
@@ -42,7 +48,14 @@ public class Doge {
   }
 
   public void display() {
-    p.fill(0);
+    float xNow = (((width-(5*height/6))/2) + height/30);
+    float yNow = height/12 + height/30;
+    float yFactor = height/6 + height/30;
+
+    x = xNow + column*yFactor;
+    y = yNow + row*yFactor;
+
+    p.fill(0, 50);
     p.rectMode(p.CORNER);
     p.rect(x, y, side, side);
     p.text("" + type, x, y);
@@ -190,12 +203,16 @@ public class Doge {
   }
 
   public void newDoge() {
-    System.out.println("boxes length = " + boxes.size());
+    //System.out.println("boxes length = " + boxes.size());
     Box get = boxes.get((int)p.random(0, boxes.size()));
     x = get.x();
     y = get.y();
 
     boxes.remove(get);
+  }
+
+  public int allDogesSize() {
+    return allDoges.size();
   }
 
   protected PApplet p;
@@ -218,4 +235,7 @@ public class Doge {
   protected float yNowIn;
 
   private ArrayList<Box> boxes;
+
+  private int row;
+  private int column;
 }

@@ -25,17 +25,24 @@ public class Main extends PApplet {
     yFactor = height/6 + height/30;
     sideFactor = height/6;
 
-    for(int i = 1; i <= 16; i++) {
-      if(i != 1 && i%4 == 1) {
-        yNow = yNow + yFactor;
-        xNow = xNowIn;
+    for(int i = 0; i < 4; i++) {
+      for(int j = 0; j < 4; j++) {
+        Box b = new Box(this, i, j, sideFactor, width, height);
+        boxes.add(b);
       }
-
-      Box b = new Box(this, xNow, yNow, sideFactor);
-      boxes.add(b);
-
-      xNow = xNow + yFactor;
     }
+
+    //for(int i = 1; i <= 16; i++) {
+    //  if(i != 1 && i%4 == 1) {
+      //  yNow = yNow + yFactor;
+    //    xNow = xNowIn;
+  //    }
+
+  //    Box b = new Box(this, xNow, yNow, sideFactor);
+  //    boxes.add(b);
+
+//      xNow = xNow + yFactor;
+//    }
 
 
     Doge test = new Doge(this, width, height, xNowIn, yNowIn, yFactor, sideFactor, doges, boxes);
@@ -62,8 +69,8 @@ public class Main extends PApplet {
 
     rectMode(CORNER);
     fill(0);
-    text(doges.size(), 25, 25);
-
+    text("doges.size() + " + doges.size(), 25, 25);
+    text("allDoges.size() + " + doges.size(), 25, 50);
 
   }
 
@@ -100,7 +107,7 @@ public class Main extends PApplet {
       //System.out.println("here at making the new e");
       //System.out.println("(" + e.x() + ", " + e.y() + ")");
     }
-    System.out.println("");
+    //System.out.println("");
 
     doges.add(e);
   }

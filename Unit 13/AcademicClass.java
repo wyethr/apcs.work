@@ -38,7 +38,7 @@ public class AcademicClass {
 
     for(Student b: students) {
       if(b.favoriteNumber() == n) {
-        count.add(b.name());
+        count.add(b.name() + ": " + b.favoriteNumber());
       }
     }
 
