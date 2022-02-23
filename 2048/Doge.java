@@ -3,13 +3,14 @@ import processing.core.*;
 
 public class Doge {
 
-  public Doge(PApplet p, float side, ArrayList<Doge> doges, ArrayList<Box> boxes) {
+  public Doge(PApplet p, float side, ArrayList<Doge> doges, ArrayList<Box> boxes, int name) {
     this.p = p;
     this.width = width;
     this.height = height;
     this.side = side;
     this.doges = doges;
     this.boxes = new ArrayList<Box>();
+    this.name = name;
 
     row = (int)p.random(0, 4);
     column = (int)p.random(0, 4);
@@ -61,28 +62,32 @@ public class Doge {
     p.fill(0, 50);
     p.rectMode(p.CORNER);
     p.rect(x, y, side, side);
-    p.text("" + type, x, y);
+    p.text("" + name, x, y);
   }
 
   public void move(String direction) {
-    while(checkCollide(direction) == false) {
-      if(direction == "left") {
-        while(row > 0)
-          row--;
-      }
-      else if(direction == "right") {
-        while(row < 3)
-          row++;
-      }
-      else if(direction == "up") {
-        while(column > 0)
-          column--;
-      }
-      else if(direction == "down") {
-        while(column < 3)
-          column++;
+    System.out.println(name + "'s original position: (" + row + ", " + column + ")");
+    if(direction == "left") {
+      while(row > 0 && checkCollide(direction) == false)
+        row--;
+    }
+    else if(direction == "right") {
+      while(row < 3 && checkCollide(direction) == false) {
+        row++;
       }
     }
+    else if(direction == "up") {
+      while(column > 0 && checkCollide(direction) == false)
+        column--;
+    }
+    else if(direction == "down") {
+      while(column < 3 && checkCollide(direction) == false)
+        column++;
+    }
+
+    System.out.println(name + " moves to (" + row + ", " + column + ")");
+    System.out.println("");
+
   }
 
   public boolean checkCollide(String direction) {
@@ -132,9 +137,13 @@ public class Doge {
   public void newDoge() {
     Box get = boxes.get((int)p.random(0, boxes.size()));
     row = get.row();
-    y = get.column();
+    column = get.column();
 
     boxes.remove(get);
+  }
+
+  public ArrayList<Box> boxes() {
+    return boxes;
   }
 
   protected PApplet p;
@@ -155,5 +164,7 @@ public class Doge {
   protected int type;
 
   protected ArrayList<Doge> doges;
+
+  protected int name;
 
 }
