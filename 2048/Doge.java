@@ -62,37 +62,78 @@ public class Doge {
     p.fill(0, 50);
     p.rectMode(p.CORNER);
     p.rect(x, y, side, side);
-    p.text("" + name, x, y);
+    p.text("" + type, x, y);
   }
 
   public void move(String direction) {
-    System.out.println(name + "'s original position: (" + row + ", " + column + ")");
+    //System.out.println(name + "'s original position: (" + row + ", " + column + ")");
+
     if(direction == "left") {
-      while(row > 0 && checkCollide(direction) == false)
+      while(row > 0 && checkCollide(direction) == "no collide") {
         row--;
+      }
+
+      if(checkCollide(direction) == "same") {
+        doges.remove(findSame(direction));
+        row--;
+        type = type*2;
+      }
     }
     else if(direction == "right") {
-      while(row < 3 && checkCollide(direction) == false) {
+      while(row < 3 && checkCollide(direction) == "no collide") {
         row++;
+      }
+
+      if(checkCollide(direction) == "same") {
+        doges.remove(findSame(direction));
+        row++;
+        type = type*2;
       }
     }
     else if(direction == "up") {
-      while(column > 0 && checkCollide(direction) == false)
+      while(column > 0 && checkCollide(direction) == "no collide") {
         column--;
+      }
+
+      if(checkCollide(direction) == "same") {
+        doges.remove(findSame(direction));
+        column--;
+        type = type*2;
+      }
     }
     else if(direction == "down") {
-      while(column < 3 && checkCollide(direction) == false)
+      while(column < 3 && checkCollide(direction) == "no collide") {
         column++;
+      }
+
+      if(checkCollide(direction) == "same") {
+        doges.remove(findSame(direction));
+        column++;
+        type = type*2;
+      }
     }
 
-    System.out.println(name + " moves to (" + row + ", " + column + ")");
-    System.out.println("");
+    //System.out.println(name + " moves to (" + row + ", " + column + ")");
+    //System.out.println("");
+    //System.out.println("#");
+    //System.out.println("");
 
   }
 
-  public boolean checkCollide(String direction) {
+  public String checkCollide(String direction) {
     int xBit = row;
     int yBit = column;
+
+    //System.out.println("other doges length: " + doges.size());
+    //System.out.println("");
+
+    //System.out.println(name + "'s og row: " + row);
+    //System.out.println(name + "'s og column: " + column);
+    //System.out.println("");
+
+    //System.out.println(name + "'s og xBit: " + xBit);
+    //System.out.println(name + "'s og yBit: " + yBit);
+    //System.out.println("");
 
     if(direction == "right") {
       xBit++;
@@ -107,23 +148,45 @@ public class Doge {
       yBit++;
     }
 
+    //System.out.println(name + "'s new xBit: " + xBit);
+    //System.out.println(name + "'s new yBit: " + yBit);
+    //System.out.println("");
+
     for(Doge other: doges) {
+      //System.out.println("     OTHER " + other.name() + "'s row: " + other.row());
+      //System.out.println("     OTHER " + other.name() + "'s column: " + other.column());
+
       if(other.equals(this)) {
-        break;
+        //System.out.println("");
+        //System.out.println("     *");
+        //System.out.println("");
       }
 
       else if(other.row() == xBit && other.column() == yBit) {
-        return true;
+        //System.out.println("     COLLIDE!");
+        //System.out.println("");
+        //System.out.println("     *");
+        //System.out.println("");
+
+        if(other.type() == type) {
+          return "same";
+        }
+
+        return "collide";
       }
+
+      //System.out.println("");
+      //System.out.println("     *");
+      //System.out.println("");
+
     }
 
-    return false;
+    return "no collide";
   }
 
   public boolean checkCollide() {
     for(Doge other: doges) {
       if(other.equals(this)) {
-        break;
       }
 
       else if(other.row() == row && other.column() == column) {
@@ -144,6 +207,76 @@ public class Doge {
 
   public ArrayList<Box> boxes() {
     return boxes;
+  }
+
+  public int name() {
+    return name;
+  }
+
+  public Doge findSame(String direction) {
+    int xBit = row;
+    int yBit = column;
+
+    //System.out.println("other doges length: " + doges.size());
+    //System.out.println("");
+
+    //System.out.println(name + "'s og row: " + row);
+    //System.out.println(name + "'s og column: " + column);
+    //System.out.println("");
+
+    //System.out.println(name + "'s og xBit: " + xBit);
+    //System.out.println(name + "'s og yBit: " + yBit);
+    //System.out.println("");
+
+    if(direction == "right") {
+      xBit++;
+    }
+    else if(direction == "left") {
+      xBit--;
+    }
+    else if(direction == "up") {
+      yBit--;
+    }
+    else if(direction == "down") {
+      yBit++;
+    }
+
+    //System.out.println(name + "'s new xBit: " + xBit);
+    //System.out.println(name + "'s new yBit: " + yBit);
+    //System.out.println("");
+
+    for(Doge other: doges) {
+      //System.out.println("     OTHER " + other.name() + "'s row: " + other.row());
+      //System.out.println("     OTHER " + other.name() + "'s column: " + other.column());
+
+      if(other.equals(this)) {
+        //System.out.println("");
+        //System.out.println("     *");
+        //System.out.println("");
+      }
+
+      else if(other.row() == xBit && other.column() == yBit) {
+        //System.out.println("     COLLIDE!");
+        //System.out.println("");
+        //System.out.println("     *");
+        //System.out.println("");
+
+        if(other.type() == type) {
+          return other;
+        }
+      }
+
+      //System.out.println("");
+      //System.out.println("     *");
+      //System.out.println("");
+
+    }
+
+    return null;
+  }
+
+  public int type() {
+    return type;
   }
 
   protected PApplet p;

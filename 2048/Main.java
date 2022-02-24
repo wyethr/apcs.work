@@ -1,4 +1,4 @@
-//WORKING ON MAKING SURE THEY DON'T HIT INTO EACH OTHER
+//KINDA BROKEN BUT LOW-KEY WORKING - DOESN'T MOVE OVER ENTIRELY
 
 import java.util.*;
 import processing.core.*;
@@ -67,60 +67,81 @@ public class Main extends PApplet {
 
     if(keyCode == LEFT) {
       direction = "left";
+      System.out.println("              LEFT!!!!!");
 
       for(int rowLeft = 0; rowLeft < 4; rowLeft++) {
+        //System.out.println("Row: " + rowLeft);
+        //System.out.println("");
         for(int columnLeft = 0; columnLeft < 4; columnLeft++) {
-          if(getDoge(rowLeft, columnLeft) == null) {
-            break;
+          //System.out.println("(" + columnLeft + ", " + rowLeft + ")");
+          if(getDoge(rowLeft, columnLeft) != null) {
+            getDoge(rowLeft, columnLeft).move(direction);
+            //System.out.println("FOUND DOGE");
           }
-
-          getDoge(rowLeft, columnLeft).move(direction);
+          //System.out.println("");
         }
+      //  System.out.println("*");
+      //  System.out.println("");
       }
     }
     else if(keyCode == RIGHT) {
       direction = "right";
+      System.out.println("              RIGHT!!!!!");
 
       for(int rowRight = 0; rowRight < 4; rowRight++) {
+    //    System.out.println("Row: " + rowRight);
+    //    System.out.println("");
         for(int columnRight = 3; columnRight > -1; columnRight--) {
-          if(getDoge(rowRight, columnRight) == null) {
-            break;
-          }
+      //    System.out.println("(" + columnRight + ", " + rowRight + ")");
 
-          getDoge(rowRight, columnRight).move(direction);
+          if(getDoge(rowRight, columnRight) != null) {
+            getDoge(rowRight, columnRight).move(direction);
+      //      System.out.println("FOUND DOGE");
+          }
+      //    System.out.println("");
         }
+      //  System.out.println("*");
+      //  System.out.println("");
       }
     }
     else if(keyCode == DOWN) {
       direction = "down";
+      System.out.println("              DOWN!!!!!");
+
 
       for(int columnDown = 0; columnDown < 4; columnDown++) {
+        //System.out.println("Column: " + columnDown);
+        //System.out.println("");
         for(int rowDown = 3; rowDown > -1; rowDown--) {
-          if(getDoge(rowDown, columnDown) == null) {
-            break;
-          }
+          //System.out.println("(" + columnDown + ", " + rowDown + ")");
 
-          getDoge(rowDown, columnDown).move(direction);
+          if(getDoge(rowDown, columnDown) != null) {
+            getDoge(rowDown, columnDown).move(direction);
+            //System.out.println("FOUND DOGE");
+          }
+          //System.out.println("");
         }
+      //  System.out.println("*");
+      //  System.out.println("");
       }
     }
     else if(keyCode == UP) {
       direction = "up";
+      System.out.println("              UP!!!!!");
+
 
       for(int columnUp = 0; columnUp < 4; columnUp++) {
         for(int rowUp = 0; rowUp < 4; rowUp++) {
-          if(getDoge(rowUp, columnUp) == null) {
-            break;
+          if(getDoge(rowUp, columnUp) != null) {
+            getDoge(rowUp, columnUp).move(direction);
           }
-
-          getDoge(rowUp, columnUp).move(direction);
         }
       }
     }
 
-    for(Doge d: doges) {
-      d.move(direction);
-    }
+    //for(Doge d: doges) {
+      //d.move(direction);
+    //}
 
     System.out.println("");
 
