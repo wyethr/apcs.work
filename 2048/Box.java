@@ -15,6 +15,8 @@ public class Box {
 
     x = xNow + column*yFactor;
     y = yNow + row*yFactor;
+
+    //System.out.println("(" + row + ", " + column + ")");
   }
 
   public int row() {
@@ -41,6 +43,8 @@ public class Box {
     p.fill(255);
     p.rectMode(p.CORNER);
     p.rect(x, y, side, side);
+
+    //p.text("(" + column + ", " + row + ")", x, y);
   }
 
   public Box copy() {
