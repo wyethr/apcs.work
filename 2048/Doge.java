@@ -76,13 +76,9 @@ public class Doge {
     destination.x = x;
     destination.y = y;
 
-    System.out.println("difference between = " + position.dist(destination));
-
-    if(position.dist(destination) < vFactor) {
+    if(position.dist(destination) < 1) {
       velocity.x = 0;
       velocity.y = 0;
-
-      position = destination;
     }
 
     //System.out.println("position.x = " + position.x);
