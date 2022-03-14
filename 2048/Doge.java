@@ -12,8 +12,9 @@ public class Doge {
     this.boxes = new ArrayList<Box>();
     this.name = name;
 
-    row = (int)p.random(0, 4);
-    column = (int)p.random(0, 4);
+    offLimits = false;
+
+    selectRowColumn();
 
     int typeMultIn = (int)p.random(0, 3);
 
@@ -36,13 +37,16 @@ public class Doge {
     float yNow = p.height/12 + p.height/30;
     float yFactor = p.height/6 + p.height/30;
 
-    float xIsh = xNow + column*yFactor;
-    float yIsh = yNow + row*yFactor;
+    float xStart = xNow + column*yFactor;
+    float yStart = yNow + row*yFactor;
 
-    position = new PVector(xIsh, yIsh);
-    destination = position;
+    position = new PVector(xStart, yStart);
+    destination = new PVector(200, 200);
 
-    vFactor = 1;
+    vFactor = 50;
+
+    offLimitsMerge = false;
+
   }
 
   public float width() {
@@ -76,9 +80,37 @@ public class Doge {
     destination.x = x;
     destination.y = y;
 
-    if(position.dist(destination) < 1) {
+    if(position.dist(destination) < vFactor) {
       velocity.x = 0;
       velocity.y = 0;
+
+      position.x = x;
+      position.y = y;
+    }
+
+    //System.out.println(name + " is checkCollide = " + checkCollide());
+    if(checkCollide().equals("same")) {
+      //System.out.println(name + " is colliding with " + findSame().name());
+      //System.out.println("    " + name + " is offLimitsMerge() " + offLimitsMerge);
+      //System.out.println("    " + findSame().name() + " is offLimitsMerge() " + findSame().offLimitsMerge);
+    }
+    if(checkCollide().equals("same") && findSame().offLimitsMerge() == false) {
+      //System.out.println(name + " is offLimits = " + offLimits);
+
+      offLimits = true;
+
+      Doge findSame = findSame();
+
+      //System.out.println(findSame.position().dist(position));
+
+      //System.out.println("    " + findSame.position().dist(position) + " - " + vFactor);
+
+      if(findSame.position().dist(position) <= vFactor) {
+        doges.remove(findSame);
+        //System.out.println("REMOVED " + findSame.name());
+        type = type*2;
+        offLimitsMerge = true;
+      }
     }
 
     //System.out.println("position.x = " + position.x);
@@ -96,96 +128,131 @@ public class Doge {
     //System.out.println("");
 
     position.add(velocity);
-    x = xNow + row*yFactor;
-    y = yNow + column*yFactor;
 
     p.fill(0, 50);
     p.rectMode(p.CORNER);
-    p.rect(x, y, side, side);
-    p.text("" + type, x, y);
+    p.rect(position.x, position.y, side, side);
+    p.text("name " + name + " : " + "type " + type + ": (" + column + ", " + row + ")", x, y);
   }
 
   public void move(String direction) {
     //System.out.println(name + "'s original position: (" + row + ", " + column + ")");
-
-    if(direction == "left") {
-      while(row > 0 && checkCollide(direction) == "no collide") {
-        row--;
-      }
-
-      if(checkCollide(direction) == "same") {
-        doges.remove(findSame(direction));
-        row--;
-        type = type*2;
-      }
-    }
-    else if(direction == "right") {
-      while(row < 3 && checkCollide(direction) == "no collide") {
-        row++;
-      }
-
-      if(checkCollide(direction) == "same") {
-        doges.remove(findSame(direction));
-        row++;
-        type = type*2;
-      }
-    }
-    else if(direction == "up") {
-      while(column > 0 && checkCollide(direction) == "no collide") {
-        column--;
-      }
-
-      if(checkCollide(direction) == "same") {
-        doges.remove(findSame(direction));
-        column--;
-        type = type*2;
-      }
-    }
-    else if(direction == "down") {
-      while(column < 3 && checkCollide(direction) == "no collide") {
-        column++;
-      }
-
-      if(checkCollide(direction) == "same") {
-        doges.remove(findSame(direction));
-        column++;
-        type = type*2;
-      }
-    }
-
-    //System.out.println(name + " moves to (" + row + ", " + column + ")");
-    //System.out.println("");
-    //System.out.println("#");
+    //System.out.println(name + " offLimits = " + offLimits);
     //System.out.println("");
 
+    if(velocity.x == 0 && velocity.y == 0) {
+      System.out.println("     " + name + ": " + checkCollide(direction));
+
+      if(direction.equals("left") ) {
+        while(column > 0 && checkCollide(direction).equals("no collide")) {
+          column--;
+          velocity.x = -1*vFactor;
+          velocity.y = 0;
+          System.out.println("     " + name + ": " + checkCollide(direction));
+        }
+
+        while(column > 0 && checkCollide(direction).equals("same") && findSameTo(direction).offLimits == false) {
+          //System.out.println(name + " is moving up to same");
+          offLimits = true;
+          findSameTo(direction).offLimits = true;
+          column--;
+          velocity.x = -1*vFactor;
+          velocity.y = 0;
+          System.out.println("     " + name + ": " + checkCollide(direction));
+        }
+
+      }
+      else if(direction.equals("right") ) {
+        while(column < 3 && checkCollide(direction).equals("no collide") ) {
+          column++;
+          velocity.x = vFactor;
+          velocity.y = 0;
+          System.out.println("     " + name + ": " + checkCollide(direction));
+        }
+
+        while(column < 3 && checkCollide(direction).equals("same") && findSameTo(direction).offLimits == false) {
+          //System.out.println(name + " is moving up to same");
+          offLimits = true;
+          findSameTo(direction).offLimits = true;
+          column++;
+          velocity.x = vFactor;
+          velocity.y = 0;
+          System.out.println("     " + name + ": " + checkCollide(direction));
+        }
+      }
+      else if(direction.equals("up") ) {
+        while(row > 0 && checkCollide(direction).equals("no collide")) {
+          row--;
+          velocity.x = 0;
+          velocity.y = -1*vFactor;
+          System.out.println("     " + name + ": " + checkCollide(direction));
+        }
+
+        while(row > 0 && checkCollide(direction).equals("same") && findSameTo(direction).offLimits == false) {
+          //System.out.println(name + " is moving up to same");
+          offLimits = true;
+          findSameTo(direction).offLimits = true;
+          row--;
+          velocity.x = 0;
+          velocity.y = -1*vFactor;
+          System.out.println("     " + name + ": " + checkCollide(direction));
+        }
+      }
+      else if(direction.equals("down") ) {
+        while(row < 3 && checkCollide(direction).equals("no collide") ) {
+          row++;
+          velocity.x = 0;
+          velocity.y = vFactor;
+          System.out.println("     " + name + ": " + checkCollide(direction));
+
+        }
+
+        while(row < 3 && checkCollide(direction).equals("same") && findSameTo(direction).offLimits == false) {
+          //System.out.println(name + " is moving up to same");
+          offLimits = true;
+          findSameTo(direction).offLimits = true;
+          row++;
+          velocity.x = 0;
+          velocity.y = vFactor;
+          System.out.println("     " + name + ": " + checkCollide(direction));
+
+        }
+      }
+
+      //System.out.println(name + " moves to (" + row + ", " + column + ")");
+      //System.out.println("");
+      //System.out.println("#");
+      //System.out.println("");
+
+    }
   }
 
   public String checkCollide(String direction) {
-    int xBit = row;
-    int yBit = column;
+    int newColumn = column;
+    int newRow = row;
 
     //System.out.println("other doges length: " + doges.size());
     //System.out.println("");
 
-    //System.out.println(name + "'s og row: " + row);
-    //System.out.println(name + "'s og column: " + column);
+    //System.out.println("     " + name + "'s og row: " + row);
+    //System.out.println("     " + name + "'s og column: " + column);
     //System.out.println("");
 
-    //System.out.println(name + "'s og xBit: " + xBit);
-    //System.out.println(name + "'s og yBit: " + yBit);
+    //System.out.println("     " + name + "'s og newColumn: " + newColumn);
+    //System.out.println("     " + name + "'s og newRow: " + newRow);
     //System.out.println("");
 
-    if(direction == "right") {
-      xBit++;
+    if(direction.equals("right")) {
+      newColumn++;
     }
-    else if(direction == "left") {
-      xBit--;
+    else if(direction.equals("left") ) {
+      newColumn--;
     }
-    else if(direction == "up") {
-      yBit--;
+    else if(direction.equals("up")) {
+      newRow--;
     }
-    else if(direction == "down") {
-      yBit++;
+    else if(direction.equals("down") ) {
+      newRow++;
     }
 
     //System.out.println(name + "'s new xBit: " + xBit);
@@ -202,17 +269,19 @@ public class Doge {
         //System.out.println("");
       }
 
-      else if(other.row() == xBit && other.column() == yBit) {
+      else if(other.row() == newRow && other.column() == newColumn) {
         //System.out.println("     COLLIDE!");
         //System.out.println("");
         //System.out.println("     *");
         //System.out.println("");
 
         if(other.type() == type) {
+          //System.out.println(name + ": " + "same");
           return "same";
         }
 
-        return "collide";
+        //System.out.println(name + ": " + "collide with " + other.name());
+        return "collide with " + other.name();
       }
 
       //System.out.println("");
@@ -221,26 +290,47 @@ public class Doge {
 
     }
 
+    //System.out.println(name + ": " + "no collide");
     return "no collide";
   }
 
-  public boolean checkCollide() {
+  public String checkCollide() {
+    //System.out.println("     " + name);
     for(Doge other: doges) {
+      //System.out.println("");
+      //System.out.println(other.name() + ": ");
+      //System.out.println("row = " + row + " - " + other.row());
+      //System.out.println("column = " + column + " - " + other.column());
       if(other.equals(this)) {
       }
 
       else if(other.row() == row && other.column() == column) {
-        return true;
+        //System.out.println("      COLLIDE");
+        if(other.type() == type) {
+          return "same";
+        }
+
+        return "collide";
       }
     }
 
-    return false;
+    //System.out.println("      NO COLLIDE");
+    return "no collide";
   }
 
   public void newDoge() {
     Box get = boxes.get((int)p.random(0, boxes.size()));
     row = get.row();
     column = get.column();
+
+    float xNow = (((p.width-(5*p.height/6))/2) + p.height/30);
+    float yNow = p.height/12 + p.height/30;
+    float yFactor = p.height/6 + p.height/30;
+
+    float xStart = xNow + column*yFactor;
+    float yStart = yNow + row*yFactor;
+
+    position = new PVector(xStart, yStart);
 
     boxes.remove(get);
   }
@@ -253,32 +343,44 @@ public class Doge {
     return name;
   }
 
-  public Doge findSame(String direction) {
-    int xBit = row;
-    int yBit = column;
+  public Doge findSame() {
+    for(Doge other: doges) {
+      if(other.equals(this)) {
+      }
+      else if(other.row() == row && other.column == column) {
+        return other;
+      }
+    }
+
+    return null;
+  }
+
+  public Doge findSameTo(String direction) {
+    int newColumn = column;
+    int newRow = row;
 
     //System.out.println("other doges length: " + doges.size());
     //System.out.println("");
 
-    //System.out.println(name + "'s og row: " + row);
-    //System.out.println(name + "'s og column: " + column);
+//    System.out.println("     " + name + "'s og row: " + row);
+//    System.out.println("     " + name + "'s og column: " + column);
     //System.out.println("");
 
-    //System.out.println(name + "'s og xBit: " + xBit);
-    //System.out.println(name + "'s og yBit: " + yBit);
+//    System.out.println("     " + name + "'s og newColumn: " + newColumn);
+//    System.out.println("     " + name + "'s og newRow: " + newRow);
     //System.out.println("");
 
-    if(direction == "right") {
-      xBit++;
+    if(direction.equals("right")) {
+      newColumn++;
     }
-    else if(direction == "left") {
-      xBit--;
+    else if(direction.equals("left") ) {
+      newColumn--;
     }
-    else if(direction == "up") {
-      yBit--;
+    else if(direction.equals("up")) {
+      newRow--;
     }
-    else if(direction == "down") {
-      yBit++;
+    else if(direction.equals("down") ) {
+      newRow++;
     }
 
     //System.out.println(name + "'s new xBit: " + xBit);
@@ -286,8 +388,8 @@ public class Doge {
     //System.out.println("");
 
     for(Doge other: doges) {
-      //System.out.println("     OTHER " + other.name() + "'s row: " + other.row());
-      //System.out.println("     OTHER " + other.name() + "'s column: " + other.column());
+    //  System.out.println("     OTHER " + other.name() + "'s row: " + other.row());
+    //  System.out.println("     OTHER " + other.name() + "'s column: " + other.column());
 
       if(other.equals(this)) {
         //System.out.println("");
@@ -295,8 +397,8 @@ public class Doge {
         //System.out.println("");
       }
 
-      else if(other.row() == xBit && other.column() == yBit) {
-        //System.out.println("     COLLIDE!");
+      else if(other.row() == newRow && other.column() == newColumn) {
+      //  System.out.println("     COLLIDE!");
         //System.out.println("");
         //System.out.println("     *");
         //System.out.println("");
@@ -304,6 +406,7 @@ public class Doge {
         if(other.type() == type) {
           return other;
         }
+
       }
 
       //System.out.println("");
@@ -315,8 +418,57 @@ public class Doge {
     return null;
   }
 
+  public void selectRowColumn() {
+    row = (int)p.random(0, 4);
+    column = (int)p.random(0, 4);
+  }
+
   public int type() {
     return type;
+  }
+
+  public boolean offLimits() {
+    return offLimits;
+  }
+
+  public void setOffLimits() {
+    offLimits = false;
+  }
+
+  public float destinationX() {
+    return destination.x;
+  }
+
+  public float destinationY() {
+    return destination.y;
+  }
+
+  public float positionX() {
+    return position.x;
+  }
+
+  public float positionY() {
+    return position.y;
+  }
+
+  public PVector position() {
+    return position;
+  }
+
+  public PVector destination() {
+    return destination;
+  }
+
+  public boolean remove() {
+    return remove;
+  }
+
+  public boolean offLimitsMerge() {
+    return offLimitsMerge;
+  }
+
+  public void setOffLimitsMerge() {
+    offLimitsMerge = false;
   }
 
   protected PApplet p;
@@ -340,10 +492,15 @@ public class Doge {
 
   protected int name;
 
-  protected PVector destination;
-  protected PVector position;
+  protected boolean offLimits;
+
   protected PVector velocity;
+  protected PVector position;
+  protected PVector destination;
 
   protected int vFactor;
+
+  protected boolean remove;
+  protected boolean offLimitsMerge;
 
 }
