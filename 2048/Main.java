@@ -21,6 +21,10 @@ public class Main extends PApplet {
     return null;
   }
 
+  public void updateScore(int type) {
+    score = score + (int)Math.pow(2, type);
+  }
+
   private boolean allInPlace() {
     for(Doge d: doges) {
       if(d.position().dist(d.destination()) > 1) {
@@ -39,6 +43,8 @@ public class Main extends PApplet {
   public void setup() {
     boxes = new ArrayList<Box>();
     doges = new ArrayList<Doge>();
+
+    score = 0;
 
     //System.out.println(moved);
     moved = false;
@@ -70,14 +76,20 @@ public class Main extends PApplet {
     background(255);
 
     fill(0);
-    text("doges.size: " + doges.size(), 25, 25);
-    text("nameKeeper: " + nameKeeper, 25, 50);
-    text("size: (" + width + ", " + height + ")", 25, 75);
+    //text("doges.size: " + doges.size(), 25, 25);
+    //text("nameKeeper: " + nameKeeper, 25, 50);
+    //text("size: (" + width + ", " + height + ")", 25, 75);
 
     rectMode(CENTER);
     noStroke();
     fill(200);
     rect(width/2, height/2, 5*height/6, 5*height/6);
+
+    rectMode(CORNER);
+    rect((((width-(5*height/6))/2)), height/60, 2*height/12, height/24);
+    fill(255);
+    textMode(CENTER);
+    text("   Score: " + score, (((width-(5*height/6))/2)), height/60 + height/36);
 
     for(Box b: boxes) {
       b.display();
@@ -104,16 +116,16 @@ public class Main extends PApplet {
         }
       }
 
-      text(e.name() + " - type: " + e.type(), xPlacement, textPlacement);
-      textPlacement = textPlacement + 25;
-      text("   (" + e.column() + ", " + e.row() + ")", xPlacement, textPlacement);
-      textPlacement = textPlacement + 25;
-      text("   checkCollide() is " + e.checkCollide(), xPlacement, textPlacement);
-      textPlacement = textPlacement + 25;
-      text("   (" + e.position().x + ", " + e.position().y + ")", xPlacement, textPlacement);
-      textPlacement = textPlacement + 25;
-      text("", xPlacement, textPlacement);
-      textPlacement = textPlacement + 25;
+      //text(e.name() + " - type: " + e.type(), xPlacement, textPlacement);
+      //textPlacement = textPlacement + 25;
+      //text("   (" + e.column() + ", " + e.row() + ")", xPlacement, textPlacement);
+      //textPlacement = textPlacement + 25;
+      //text("   checkCollide() is " + e.checkCollide(), xPlacement, textPlacement);
+      //textPlacement = textPlacement + 25;
+      //text("   (" + e.position().x + ", " + e.position().y + ")", xPlacement, textPlacement);
+      //textPlacement = textPlacement + 25;
+      //text("", xPlacement, textPlacement);
+      //textPlacement = textPlacement + 25;
     }
 
     //System.out.println("allInPlace = " + allInPlace());
@@ -254,5 +266,7 @@ public class Main extends PApplet {
 
   private int nameKeeper;
   private boolean moved;
+
+  private int score;
 
 }

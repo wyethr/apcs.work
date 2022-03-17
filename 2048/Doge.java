@@ -3,7 +3,7 @@ import processing.core.*;
 
 public class Doge {
 
-  public Doge(PApplet p, float side, ArrayList<Doge> doges, ArrayList<Box> boxes, int name) {
+  public Doge(Main p, float side, ArrayList<Doge> doges, ArrayList<Box> boxes, int name) {
     this.p = p;
     this.width = width;
     this.height = height;
@@ -16,16 +16,19 @@ public class Doge {
 
     selectRowColumn();
 
-    int typeMultIn = (int)p.random(0, 3);
+    int typeMultIn = (int)p.random(0, 10);
 
     if(typeMultIn <= 2) {
       typeMult = 1;
+      type = 1;
     }
     else {
       typeMult = 2;
+      type = 2;
     }
 
-    type = (int)Math.pow(2, typeMult);
+    //type = (int)Math.pow(2, typeMult);
+
 
     for(Box b: boxes) {
       this.boxes.add(b.copy());
@@ -46,6 +49,9 @@ public class Doge {
     vFactor = 50;
 
     offLimitsMerge = false;
+
+    image = p.loadImage(type + ".png");
+    image.resize((int)side, (int)side);
 
   }
 
@@ -108,8 +114,12 @@ public class Doge {
       if(findSame.position().dist(position) <= vFactor) {
         doges.remove(findSame);
         //System.out.println("REMOVED " + findSame.name());
-        type = type*2;
+        type++;
+        p.updateScore(type);
         offLimitsMerge = true;
+
+        image = p.loadImage(type + ".png");
+        image.resize((int)side, (int)side);
       }
     }
 
@@ -129,10 +139,11 @@ public class Doge {
 
     position.add(velocity);
 
-    p.fill(0, 50);
+    p.fill(255);
     p.rectMode(p.CORNER);
     p.rect(position.x, position.y, side, side);
-    p.text("name " + name + " : " + "type " + type + ": (" + column + ", " + row + ")", x, y);
+    p.image(image, position.x, position.y);
+    //p.text("name " + name + " : " + "type " + type + ": (" + column + ", " + row + ")", x, y);
   }
 
   public void move(String direction) {
@@ -471,7 +482,7 @@ public class Doge {
     offLimitsMerge = false;
   }
 
-  protected PApplet p;
+  protected Main p;
 
   protected ArrayList<Box> boxes;
 
@@ -502,5 +513,7 @@ public class Doge {
 
   protected boolean remove;
   protected boolean offLimitsMerge;
+
+  protected PImage image;
 
 }
