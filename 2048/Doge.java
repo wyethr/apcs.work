@@ -18,7 +18,7 @@ public class Doge {
 
     int typeMultIn = (int)p.random(0, 10);
 
-    if(typeMultIn <= 2) {
+    if(typeMultIn >= 2) {
       typeMult = 1;
       type = 1;
     }
