@@ -16,18 +16,43 @@ public class Doge {
 
     selectRowColumn();
 
-    int typeMultIn = (int)p.random(0, 10);
+    selectType();
 
-    if(typeMultIn >= 2) {
-      typeMult = 1;
-      type = 1;
-    }
-    else {
-      typeMult = 2;
-      type = 2;
+    for(Box b: boxes) {
+      this.boxes.add(b.copy());
     }
 
-    //type = (int)Math.pow(2, typeMult);
+    velocity = new PVector(0, 0);
+
+    float xNow = (((p.width-(5*p.height/6))/2) + p.height/30);
+    float yNow = p.height/12 + p.height/30;
+    float yFactor = p.height/6 + p.height/30;
+
+    float xStart = xNow + column*yFactor;
+    float yStart = yNow + row*yFactor;
+
+    position = new PVector(xStart, yStart);
+    destination = new PVector(200, 200);
+
+    vFactor = 50;
+
+    offLimitsMerge = false;
+
+    image = p.loadImage(type + ".png");
+    image.resize((int)side, (int)side);
+
+  }
+
+  public Doge(Main p, float side, ArrayList<Doge> doges, ArrayList<Box> boxes, int name, int column, int row, int type) {
+    this.p = p;
+    this.width = width;
+    this.height = height;
+    this.side = side;
+    this.doges = doges;
+    this.boxes = new ArrayList<Box>();
+    this.name = name;
+
+    offLimits = false;
 
 
     for(Box b: boxes) {
@@ -49,6 +74,12 @@ public class Doge {
     vFactor = 50;
 
     offLimitsMerge = false;
+
+    this.type = type;
+    this.row = row;
+    this.column = column;
+
+    System.out.println(name + ": " + type);
 
     image = p.loadImage(type + ".png");
     image.resize((int)side, (int)side);
@@ -76,6 +107,8 @@ public class Doge {
   }
 
   public void display() {
+    p.imageMode(p.CORNER);
+
     float xNow = (((p.width-(5*p.height/6))/2) + p.height/30);
     float yNow = p.height/12 + p.height/30;
     float yFactor = p.height/6 + p.height/30;
@@ -139,11 +172,23 @@ public class Doge {
 
     position.add(velocity);
 
-    p.fill(255);
-    p.rectMode(p.CORNER);
-    p.rect(position.x, position.y, side, side);
-    p.image(image, position.x, position.y);
-    //p.text("name " + name + " : " + "type " + type + ": (" + column + ", " + row + ")", x, y);
+    if(p.mouseX >= position.x && p.mouseX <= position.x + side && p.mouseY >= position.y && p.mouseY <= position.y + side) {
+      p.fill(p.backgroundColor);
+      p.rectMode(p.CORNER);
+      p.rect(position.x, position.y, side, side);
+      p.fill(255);
+      p.textSize(3*side/4);
+      p.textAlign(p.CENTER, p.CENTER);
+      p.text(typeLetter(), position.x + side/2, position.y + side/2 - (float).125*p.textAscent());
+    }
+    else {
+      p.fill(255);
+      p.rectMode(p.CORNER);
+      p.rect(position.x, position.y, side, side);
+      p.image(image, position.x, position.y);
+      //p.text("name " + name + " : " + "type " + type + ": (" + column + ", " + row + ")", x, y);
+    }
+
   }
 
   public void move(String direction) {
@@ -152,14 +197,14 @@ public class Doge {
     //System.out.println("");
 
     if(velocity.x == 0 && velocity.y == 0) {
-      System.out.println("     " + name + ": " + checkCollide(direction));
+      //System.out.println("     " + name + ": " + checkCollide(direction));
 
       if(direction.equals("left") ) {
         while(column > 0 && checkCollide(direction).equals("no collide")) {
           column--;
           velocity.x = -1*vFactor;
           velocity.y = 0;
-          System.out.println("     " + name + ": " + checkCollide(direction));
+          //System.out.println("     " + name + ": " + checkCollide(direction));
         }
 
         while(column > 0 && checkCollide(direction).equals("same") && findSameTo(direction).offLimits == false) {
@@ -169,7 +214,7 @@ public class Doge {
           column--;
           velocity.x = -1*vFactor;
           velocity.y = 0;
-          System.out.println("     " + name + ": " + checkCollide(direction));
+          //System.out.println("     " + name + ": " + checkCollide(direction));
         }
 
       }
@@ -178,7 +223,7 @@ public class Doge {
           column++;
           velocity.x = vFactor;
           velocity.y = 0;
-          System.out.println("     " + name + ": " + checkCollide(direction));
+          //System.out.println("     " + name + ": " + checkCollide(direction));
         }
 
         while(column < 3 && checkCollide(direction).equals("same") && findSameTo(direction).offLimits == false) {
@@ -188,7 +233,7 @@ public class Doge {
           column++;
           velocity.x = vFactor;
           velocity.y = 0;
-          System.out.println("     " + name + ": " + checkCollide(direction));
+          //System.out.println("     " + name + ": " + checkCollide(direction));
         }
       }
       else if(direction.equals("up") ) {
@@ -196,7 +241,7 @@ public class Doge {
           row--;
           velocity.x = 0;
           velocity.y = -1*vFactor;
-          System.out.println("     " + name + ": " + checkCollide(direction));
+          //System.out.println("     " + name + ": " + checkCollide(direction));
         }
 
         while(row > 0 && checkCollide(direction).equals("same") && findSameTo(direction).offLimits == false) {
@@ -206,7 +251,7 @@ public class Doge {
           row--;
           velocity.x = 0;
           velocity.y = -1*vFactor;
-          System.out.println("     " + name + ": " + checkCollide(direction));
+          //System.out.println("     " + name + ": " + checkCollide(direction));
         }
       }
       else if(direction.equals("down") ) {
@@ -214,7 +259,7 @@ public class Doge {
           row++;
           velocity.x = 0;
           velocity.y = vFactor;
-          System.out.println("     " + name + ": " + checkCollide(direction));
+          //System.out.println("     " + name + ": " + checkCollide(direction));
 
         }
 
@@ -225,7 +270,7 @@ public class Doge {
           row++;
           velocity.x = 0;
           velocity.y = vFactor;
-          System.out.println("     " + name + ": " + checkCollide(direction));
+          //System.out.println("     " + name + ": " + checkCollide(direction));
 
         }
       }
@@ -286,7 +331,7 @@ public class Doge {
         //System.out.println("     *");
         //System.out.println("");
 
-        if(other.type() == type) {
+        if(other.type() == type && other.type() != 26) {
           //System.out.println(name + ": " + "same");
           return "same";
         }
@@ -317,7 +362,7 @@ public class Doge {
 
       else if(other.row() == row && other.column() == column) {
         //System.out.println("      COLLIDE");
-        if(other.type() == type) {
+        if(other.type() == type && type != 26) {
           return "same";
         }
 
@@ -429,9 +474,114 @@ public class Doge {
     return null;
   }
 
+  public void selectType() {
+    int a = 1;
+    int b = 2;
+
+    if(p.highestOnBoard() >= 16) {
+      for(int i = 0; i < p.highestOnBoard() - 15; i++) {
+        a++;
+        b++;
+      }
+    }
+
+    int typeMultIn = (int)p.random(0, 10);
+
+    if(typeMultIn >= 2) {
+      type = a;
+    }
+    else {
+      type = b;
+    }
+  }
+
   public void selectRowColumn() {
     row = (int)p.random(0, 4);
     column = (int)p.random(0, 4);
+  }
+
+  public String typeLetter() {
+    if(type == 1) {
+      return "A";
+    }
+    else if(type == 2) {
+      return "B";
+    }
+    else if(type == 3) {
+      return "C";
+    }
+    else if(type == 4) {
+      return "D";
+    }
+    else if(type == 5) {
+      return "E";
+    }
+    else if(type == 6) {
+      return "F";
+    }
+    else if(type == 7) {
+      return "G";
+    }
+    else if(type == 8) {
+      return "H";
+    }
+    else if(type == 9) {
+      return "I";
+    }
+    else if(type == 10) {
+      return "J";
+    }
+    else if(type == 11) {
+      return "K";
+    }
+    else if(type == 12) {
+      return "L";
+    }
+    else if(type == 13) {
+      return "M";
+    }
+    else if(type == 14) {
+      return "N";
+    }
+    else if(type == 15) {
+      return "O";
+    }
+    else if(type == 16) {
+      return "P";
+    }
+    else if(type == 17) {
+      return "Q";
+    }
+    else if(type == 18) {
+      return "R";
+    }
+    else if(type == 19) {
+      return "S";
+    }
+    else if(type == 20) {
+      return "T";
+    }
+    else if(type == 21) {
+      return "U";
+    }
+    else if(type == 22) {
+      return "V";
+    }
+    else if(type == 23) {
+      return "W";
+    }
+    else if(type == 24) {
+      return "X";
+    }
+    else if(type == 25) {
+      return "Y";
+    }
+    else if(type == 26) {
+      return "Z";
+    }
+    else {
+      return "";
+    }
   }
 
   public int type() {
@@ -496,7 +646,6 @@ public class Doge {
   protected float x;
   protected float y;
 
-  protected int typeMult;
   protected int type;
 
   protected ArrayList<Doge> doges;
