@@ -17,10 +17,12 @@ public class Encouragement {
     opacityFactor = 15;
 
     word = setWord();
+
+    size = (float)p.random(p.height/40, p.height/20);
   }
 
   public void display() {
-    p.textSize(p.height/20);
+    p.textSize(size);
     p.fill(r, g, b, opacity);
     p.text(word, x, y);
   }
@@ -36,7 +38,7 @@ public class Encouragement {
   public String setWord() {
     int decide = (int)p.random(10);
     if(decide == 1) {
-      return "wahoo";
+      return "lovely";
     }
     else if(decide == 2) {
       return "you're doing great";
@@ -99,4 +101,6 @@ public class Encouragement {
 
   private float opacity;
   private float opacityFactor;
+
+  private float size;
 }

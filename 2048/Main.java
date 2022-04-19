@@ -98,7 +98,10 @@ public class Main extends PApplet {
   public void updateScore(int type) {
     score = score + (int)Math.pow(2, type);
 
-    if(random(100) < 20 && encouragements.size() < 1) {
+    ScoreAdd newScoreAdd = new ScoreAdd(this, (int)Math.pow(2, type));
+    scoreAdds.add(newScoreAdd);
+
+    if(random(100) < 40 && encouragements.size() < 1) {
       Encouragement newE = new Encouragement(this);
       encouragements.add(newE);
     }
@@ -133,6 +136,7 @@ public class Main extends PApplet {
     boxes = new ArrayList<Box>();
     doges = new ArrayList<Doge>();
     encouragements = new ArrayList<Encouragement>();
+    scoreAdds = new ArrayList<ScoreAdd>();
 
     alreadyWon = false;
 
@@ -222,8 +226,6 @@ public class Main extends PApplet {
     //while(colorChangeBlue != -1 && colorChangeBlue != 1) {
     //  colorChangeBlue = (int)random(-1, 2);
     //}
-
-    testing = new ScoreAdd(this);
 
   }
 
@@ -340,6 +342,8 @@ public class Main extends PApplet {
         textSize(youWonSize);
         textAlign(LEFT, BASELINE);
         text("YOU LOSE!", width/2 - (float)(2.9*youWonSize), height/2);
+        //textAlign(CENTER, CENTER);
+        //text("YOU LOSE!", width/2, height/2);
         youWonSize = height/65;
         textSize(youWonSize);
         text("press return to restart", width/2 - (float)(6*youWonSize), height/2 + 2*youWonSize);
@@ -405,13 +409,21 @@ public class Main extends PApplet {
       }
 
       for(int eCheck = 0; eCheck < encouragements.size(); eCheck++) {
-        System.out.println(eCheck + " = " + encouragements.get(eCheck).opacity());
         if(encouragements.get(eCheck).opacity() <= 0) {
           encouragements.remove(encouragements.get(eCheck));
         }
       }
 
-      testing.display();
+      for(ScoreAdd s: scoreAdds) {
+        s.display();
+        s.update();
+      }
+
+      for(int sCheck = 0; sCheck < scoreAdds.size(); sCheck++) {
+        if(scoreAdds.get(sCheck).opacity() <= 0) {
+          scoreAdds.remove(scoreAdds.get(sCheck));
+        }
+      }
 
     }
 
@@ -565,8 +577,8 @@ public class Main extends PApplet {
   private ArrayList<Box> boxes;
 
   private ArrayList<Doge> doges;
-
   private ArrayList<Encouragement> encouragements;
+  private ArrayList<ScoreAdd> scoreAdds;
 
   private int nameKeeper;
   private boolean moved;
@@ -599,5 +611,4 @@ public class Main extends PApplet {
   private float scoreX;
   private float scoreY;
 
-  private ScoreAdd testing;
 }
