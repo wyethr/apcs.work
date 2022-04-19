@@ -2,8 +2,7 @@
 
 //okayokay SO for the animation stuff:
 //ask dr kessner about the head branch vs the main branch
-//1. GO TO DOGE LINE 189 AND WORK ON THAT PROJECT
-//2. make the Doge grow when it's generated rather than just appear full-size
+//WORK ON THE SCOREADD
 
 import java.util.*;
 import processing.core.*;
@@ -98,6 +97,11 @@ public class Main extends PApplet {
 
   public void updateScore(int type) {
     score = score + (int)Math.pow(2, type);
+
+    if(random(100) < 20 && encouragements.size() < 1) {
+      Encouragement newE = new Encouragement(this);
+      encouragements.add(newE);
+    }
   }
 
   private boolean allInPlace() {
@@ -123,8 +127,12 @@ public class Main extends PApplet {
   }
 
   public void initialize() {
+    scoreX = (((width-(5*height/6))/2));
+    scoreY = height/60 + height/36;
+
     boxes = new ArrayList<Box>();
     doges = new ArrayList<Doge>();
+    encouragements = new ArrayList<Encouragement>();
 
     alreadyWon = false;
 
@@ -215,6 +223,8 @@ public class Main extends PApplet {
     //  colorChangeBlue = (int)random(-1, 2);
     //}
 
+    testing = new ScoreAdd(this);
+
   }
 
   public void settings() {
@@ -236,6 +246,7 @@ public class Main extends PApplet {
       image(eight, 3*width/4, 0);
     }
     else if(gameState.equals("play")) {
+      //System.out.println("encouragements.size() = " + encouragements.size());
       //System.out.println("loseGame = " + loseGame());
       textSize(height/50);
       backgroundColor = color(colorFactorRed, colorFactorGreen, colorFactorBlue);
@@ -275,7 +286,8 @@ public class Main extends PApplet {
       fill(255);
       textMode(CENTER);
       textAlign(LEFT, BASELINE);
-      text("   Score: " + score, (((width-(5*height/6))/2)), height/60 + height/36);
+      text("   Score: " + score, scoreX, scoreY);
+      //      text("   Score: " + score, (((width-(5*height/6))/2)), height/60 + height/36);
 
       imageMode(CENTER);
       float aboveWidth = 3*width/96;
@@ -315,7 +327,7 @@ public class Main extends PApplet {
         text("press return to restart", width/2 - (float)(9*youWonSize), height/2 + 4*youWonSize);
       }
 
-      if(loseGame() == true) {
+      if(loseGame() == true && moved == false) {
         rectMode(CENTER);
         stroke(backgroundColor);
         strokeWeight(height/500);
@@ -387,6 +399,19 @@ public class Main extends PApplet {
         }
       }
 
+      for(Encouragement e: encouragements) {
+        e.update();
+        e.display();
+      }
+
+      for(int eCheck = 0; eCheck < encouragements.size(); eCheck++) {
+        System.out.println(eCheck + " = " + encouragements.get(eCheck).opacity());
+        if(encouragements.get(eCheck).opacity() <= 0) {
+          encouragements.remove(encouragements.get(eCheck));
+        }
+      }
+
+      testing.display();
 
     }
 
@@ -518,18 +543,30 @@ public class Main extends PApplet {
       System.out.println("");
 
       if(alreadyWon == true || beatGame() == false) {
-        if(keyCode == LEFT || keyCode == RIGHT || keyCode == DOWN || keyCode == UP) {
-          moved = true;
+        if(loseGame() == false) {
+          if(keyCode == LEFT || keyCode == RIGHT || keyCode == DOWN || keyCode == UP) {
+            moved = true;
+          }
         }
       }
     }
 
   }
 
+  public float scoreX() {
+    return scoreX;
+  }
+
+  public float scoreY() {
+    return scoreY;
+  }
+
   private float sideFactor;
   private ArrayList<Box> boxes;
 
   private ArrayList<Doge> doges;
+
+  private ArrayList<Encouragement> encouragements;
 
   private int nameKeeper;
   private boolean moved;
@@ -559,4 +596,8 @@ public class Main extends PApplet {
   private int colorFactorBlue;
   private int colorChangeBlue;
 
+  private float scoreX;
+  private float scoreY;
+
+  private ScoreAdd testing;
 }
