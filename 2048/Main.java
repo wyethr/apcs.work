@@ -1,9 +1,3 @@
-//START BANGING ON KEYS AND SEE THE BUG! NOT COMBINING SOMETIMES
-
-//okayokay SO for the animation stuff:
-//ask dr kessner about the head branch vs the main branch
-//WORK ON THE SCOREADD
-
 import java.util.*;
 import processing.core.*;
 
@@ -55,6 +49,10 @@ public class Main extends PApplet {
   }
 
   private boolean loseGame() {
+    if(moving == true) {
+      return false;
+    }
+
     if(full() == false) {
       return false;
     }
@@ -101,7 +99,7 @@ public class Main extends PApplet {
     ScoreAdd newScoreAdd = new ScoreAdd(this, (int)Math.pow(2, type));
     scoreAdds.add(newScoreAdd);
 
-    if(random(100) < 40 && encouragements.size() < 1) {
+    if(random(100) < 20 && encouragements.size() < 1) {
       Encouragement newE = new Encouragement(this);
       encouragements.add(newE);
     }
@@ -118,7 +116,7 @@ public class Main extends PApplet {
     return true;
   }
 
-  private int decideColor(int ideal) {
+  private float decideColor(float ideal) {
     int count = (int)random(0, 2);
 
     if(count == 0) {
@@ -145,6 +143,8 @@ public class Main extends PApplet {
 
     score = 0;
 
+    moving = false;
+
     //System.out.println(moved);
     moved = false;
 
@@ -164,7 +164,7 @@ public class Main extends PApplet {
     doges.add(start2);
     doges.add(start1);
 
-    Doge test = new Doge(this, sideFactor, doges, boxes, 2, 3, 3, 17);
+    Doge test = new Doge(this, sideFactor, doges, boxes, 2, 1, 0, 26);
     //doges.add(test);
 
     while(start2.checkCollide().equals("collide") || start2.checkCollide().equals("same")) {
@@ -201,6 +201,9 @@ public class Main extends PApplet {
     zero = loadImage("0 - 2048.png");
     eight = loadImage("8 - 2048.png");
 
+    full2048 = loadImage("2048.png");
+    full2048.resize((int)11*width/96, (int)2*height/24);
+
     two.resize((int)2*width/96, (int)2*height/24);
     zero.resize((int)3*width/96, (int)2*height/24);
     four.resize((int)3*width/96, (int)2*height/24);
@@ -211,9 +214,9 @@ public class Main extends PApplet {
     colorFactorBlue = (int)random(255);
 
     backgroundColor = color(colorFactorRed, colorFactorGreen, colorFactorBlue);
-    colorChangeRed = decideColor(1);
-    colorChangeGreen = decideColor(1);
-    colorChangeBlue = decideColor(1);
+    colorChangeRed = decideColor((float)0.5);
+    colorChangeGreen = decideColor((float)0.5);
+    colorChangeBlue = decideColor((float)0.5);
 
     //while(colorChangeRed != -1 && colorChangeRed != 1) {
     //  colorChangeRed = (int)random(-1, 2);
@@ -235,6 +238,8 @@ public class Main extends PApplet {
 
   public void setup() {
     initialize();
+
+    highScore = 0;
   }
 
   public void draw() {
@@ -291,13 +296,24 @@ public class Main extends PApplet {
       text("   Score: " + score, scoreX, scoreY);
       //      text("   Score: " + score, (((width-(5*height/6))/2)), height/60 + height/36);
 
+      rectMode(CORNERS);
+      fill(200, 50);
+      rect(5*height/6 + ((width - (5*height/6))/2), height/60, 5*height/6 + ((width - (5*height/6))/2) - 2*height/12, height/60 + height/24);
+      fill(255);
+      text("   High: " + highScore, 5*height/6 + ((width - (5*height/6))/2) - 2*height/12, scoreY);
+
+      rectMode(CORNER);
+
       imageMode(CENTER);
       float aboveWidth = 3*width/96;
       float twoAboveWidth = 6*width/96 + width/192;
-      image(two, (((width-(5*height/6))/2)) + 2*height/12 + twoAboveWidth, height/24);
-      image(zero, (((width-(5*height/6))/2)) + 2*height/12 + 3*aboveWidth, height/24);
-      image(four, (((width-(5*height/6))/2)) + 2*height/12 + 4*aboveWidth, height/24);
-      image(eight, (((width-(5*height/6))/2)) + 2*height/12 + 5*aboveWidth, height/24);
+      image(full2048, width/2, height/24);
+      //text("ASL 2048", width/2, 5*height/6 + 10*(height - 5*height/6)/11);
+
+      //image(two, (((width-(5*height/6))/2)) + 3*height/14 + twoAboveWidth, height/24);
+      //image(zero, (((width-(5*height/6))/2)) + 3*height/14 + 3*aboveWidth, height/24);
+      //image(four, (((width-(5*height/6))/2)) + 3*height/14 + 4*aboveWidth, height/24);
+      //image(eight, (((width-(5*height/6))/2)) + 3*height/14 + 5*aboveWidth, height/24);
 
       for(Box b: boxes) {
         b.display();
@@ -325,8 +341,12 @@ public class Main extends PApplet {
         text("YOU WON!", width/2 - (float)(2.9*youWonSize), height/2);
         youWonSize = height/65;
         textSize(youWonSize);
-        text("press delete to continue this game", width/2 - (float)(9*youWonSize), height/2 + 2*youWonSize);
-        text("press return to restart", width/2 - (float)(9*youWonSize), height/2 + 4*youWonSize);
+        textAlign(CENTER);
+        text("press delete to continue this game", width/2, height/2 + 2*youWonSize);
+        text("press return to restart", width/2, height/2 + 4*youWonSize);
+
+        //text("press delete to continue this game", width/2 - (float)(9*youWonSize), height/2 + 2*youWonSize);
+        //text("press return to restart", width/2 - (float)(9*youWonSize), height/2 + 4*youWonSize);
       }
 
       if(loseGame() == true && moved == false) {
@@ -424,6 +444,15 @@ public class Main extends PApplet {
           scoreAdds.remove(scoreAdds.get(sCheck));
         }
       }
+
+      if(score > highScore) {
+        highScore = score;
+      }
+
+      textAlign(CENTER, BASELINE);
+      textSize(height/14);
+      fill(255);
+      text("ASL 2048", width/2, 5*height/6 + 10*(height - 5*height/6)/11);
 
     }
 
@@ -584,12 +613,15 @@ public class Main extends PApplet {
   private boolean moved;
 
   private int score;
+  private int highScore;
   private String gameState;
 
   private PImage two;
   private PImage four;
   private PImage zero;
   private PImage eight;
+
+  private PImage full2048;
 
   private float playButtonX;
   private float playButtonY;
@@ -601,14 +633,16 @@ public class Main extends PApplet {
   private PFont font;
 
   protected int backgroundColor;
-  private int colorFactorRed;
-  private int colorChangeRed;
-  private int colorFactorGreen;
-  private int colorChangeGreen;
-  private int colorFactorBlue;
-  private int colorChangeBlue;
+  private float colorFactorRed;
+  private float colorChangeRed;
+  private float colorFactorGreen;
+  private float colorChangeGreen;
+  private float colorFactorBlue;
+  private float colorChangeBlue;
 
   private float scoreX;
   private float scoreY;
+
+  protected boolean moving;
 
 }

@@ -14,7 +14,7 @@ public class Encouragement {
     b = p.random(255);
 
     opacity = 1;
-    opacityFactor = 15;
+    opacityFactor = 10;
 
     word = setWord();
 

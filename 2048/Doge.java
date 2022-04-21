@@ -140,6 +140,8 @@ public class Doge {
 
       Doge findSame = findSame();
 
+      p.moving = true;
+
       //System.out.println(findSame.position().dist(position));
 
       //System.out.println("    " + findSame.position().dist(position) + " - " + vFactor);
@@ -153,6 +155,8 @@ public class Doge {
 
         image = p.loadImage(type + ".png");
         image.resize((int)side, (int)side);
+
+        p.moving = false;
       }
     }
 

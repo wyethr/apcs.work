@@ -18,7 +18,7 @@ public class ScoreAdd {
 
   public void display() {
     p.textAlign(p.LEFT, p.BASELINE);
-    p.fill(200, opacity);
+    p.fill(255, opacity);
     p.textSize(p.height/50);
     p.text("+ " + amount, x, y);
   }
