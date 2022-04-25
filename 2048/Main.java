@@ -128,6 +128,8 @@ public class Main extends PApplet {
   }
 
   public void initialize() {
+    highScores = new String[1];
+
     scoreX = (((width-(5*height/6))/2));
     scoreY = height/60 + height/36;
 
@@ -239,7 +241,8 @@ public class Main extends PApplet {
   public void setup() {
     initialize();
 
-    highScore = 0;
+    String[] result = loadStrings(fileName);
+    highScore = result[0];
   }
 
   public void draw() {
@@ -445,8 +448,11 @@ public class Main extends PApplet {
         }
       }
 
-      if(score > highScore) {
-        highScore = score;
+      if(score > Integer.parseInt(highScore)) {
+        highScores[0] = "" + score;
+        saveStrings(fileName, highScores);
+        String[] result = loadStrings(fileName);
+        highScore = result[0];
       }
 
       textAlign(CENTER, BASELINE);
@@ -613,7 +619,7 @@ public class Main extends PApplet {
   private boolean moved;
 
   private int score;
-  private int highScore;
+  private String highScore;
   private String gameState;
 
   private PImage two;
@@ -644,5 +650,8 @@ public class Main extends PApplet {
   private float scoreY;
 
   protected boolean moving;
+
+  protected String fileName = "highScores.txt";
+  protected String[] highScores;
 
 }
