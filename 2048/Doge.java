@@ -1,5 +1,6 @@
 import java.util.*;
 import processing.core.*;
+import processing.sound.*;
 
 public class Doge {
 
@@ -40,6 +41,11 @@ public class Doge {
 
     image = p.loadImage(type + ".png");
     image.resize((int)side, (int)side);
+
+    System.out.println(name + ": " + typeLetter());
+    say = new SoundFile(p, typeLetter() + ".wav");
+
+    played = false;
 
   }
 
@@ -84,6 +90,9 @@ public class Doge {
     image = p.loadImage(type + ".png");
     image.resize((int)side, (int)side);
 
+    say = new SoundFile(p, typeLetter() + ".wav");
+
+    played = false;
   }
 
   public float width() {
@@ -150,6 +159,7 @@ public class Doge {
         doges.remove(findSame);
         //System.out.println("REMOVED " + findSame.name());
         type++;
+        say = new SoundFile(p, typeLetter() + ".wav");
         p.updateScore(type);
         offLimitsMerge = true;
 
@@ -184,8 +194,14 @@ public class Doge {
       p.textSize(3*side/4);
       p.textAlign(p.CENTER, p.CENTER);
       p.text(typeLetter(), position.x + side/2, position.y + side/2 - (float).125*p.textAscent());
+      if(played == false) {
+        played = true;
+        say.cue(0);
+        say.play();
+      }
     }
     else {
+      played = false;
       p.fill(255);
       p.rectMode(p.CORNER);
       p.rect(position.x, position.y, side, side);
@@ -668,5 +684,8 @@ public class Doge {
   protected boolean offLimitsMerge;
 
   protected PImage image;
+
+  protected SoundFile say;
+  protected boolean played;
 
 }

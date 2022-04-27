@@ -1,5 +1,8 @@
 import java.util.*;
 import processing.core.*;
+import processing.sound.*;
+
+//FIX THE SOUND
 
 public class Main extends PApplet {
 
@@ -95,6 +98,7 @@ public class Main extends PApplet {
 
   public void updateScore(int type) {
     score = score + (int)Math.pow(2, type);
+    //ping.play();
 
     ScoreAdd newScoreAdd = new ScoreAdd(this, (int)Math.pow(2, type));
     scoreAdds.add(newScoreAdd);
@@ -128,6 +132,9 @@ public class Main extends PApplet {
   }
 
   public void initialize() {
+    woosh = new SoundFile(this, "woosh3.wav");
+    ping = new SoundFile(this, "pop.mp3");
+
     highScores = new String[1];
 
     scoreX = (((width-(5*height/6))/2));
@@ -484,6 +491,9 @@ public class Main extends PApplet {
 
       if(alreadyWon == true || beatGame() == false) {
         if(loseGame() == false) {
+          //woosh.cue(0);
+          //woosh.play();
+
           if(keyCode == LEFT) {
             direction = "left";
             System.out.println("              LEFT!!!!!");
@@ -653,5 +663,8 @@ public class Main extends PApplet {
 
   protected String fileName = "highScores.txt";
   protected String[] highScores;
+
+  protected SoundFile woosh;
+  protected SoundFile ping;
 
 }
