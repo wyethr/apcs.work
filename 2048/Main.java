@@ -133,7 +133,7 @@ public class Main extends PApplet {
 
   public void initialize() {
     woosh = new SoundFile(this, "woosh3.wav");
-    ping = new SoundFile(this, "pop.mp3");
+    ping = new SoundFile(this, "ping.wav"); //ping.wav, pop.mp3
 
     highScores = new String[1];
 
